@@ -458,7 +458,7 @@ input[type=file]{display:none}
 const CONFIG = {
   // Asaas: crie conta em app.asaas.com → API Keys → copie a chave
   // NUNCA exponha essa chave em produção pública — use um backend/proxy
-  ASAAS_KEY:       '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmRhOWQ4ODNlLTY4ZGItNDQzNS1iYjNkLTg1ZmU4ODFkMmE0OTo6JGFhY2hfOWFiNjYwZjEtZjBkNS00OWZlLTliZDItZTlkOTBhYThkNDJk',
+  ASAAS_KEY:       '$aas_COLE_SUA_CHAVE_AQUI',
   ASAAS_SANDBOX:   true,   // true = testes | false = produção real
 
   // Preços (em reais)
@@ -473,9 +473,7 @@ const CONFIG = {
 };
 
 // URL base Asaas
-const ASAAS_URL = CONFIG.ASAAS_SANDBOX
-  ? 'https://sandbox.asaas.com/api/v3'
-  : 'https://api.asaas.com/api/v3';
+const ASAAS_URL = 'https://function-bun-production-60e1.up.railway.app/api';
 
 // ═══════════════════════════════════════════════════
 //  ESFERA JARVIS
@@ -903,7 +901,7 @@ async function gerarCobrancaAsaas(){
     // 1. Criar ou buscar cliente
     const clienteRes=await fetch(`${ASAAS_URL}/customers`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','access_token':CONFIG.ASAAS_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:nome,email,notificationDisabled:false})
     });
     const cliente=await clienteRes.json();
@@ -914,7 +912,7 @@ async function gerarCobrancaAsaas(){
     const dataVenc=venc.toISOString().split('T')[0];
     const cobrRes=await fetch(`${ASAAS_URL}/payments`,{
       method:'POST',
-      headers:{'Content-Type':'application/json','access_token':CONFIG.ASAAS_KEY},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         customer:cliente.id,
         billingType:'PIX',
