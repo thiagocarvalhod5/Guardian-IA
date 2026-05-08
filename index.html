@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Guardian IA</title>
+<title>Guardian IA — Perito Jurídico MCMV</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -12,173 +12,199 @@
 html,body{height:100%;overflow-x:hidden}
 body{font-family:'Rajdhani',sans-serif;background:#030712;color:#e2e8f0;font-size:16px}
 .mono{font-family:'Share Tech Mono',monospace}
-
-/* ── CANVAS PARTÍCULAS ── */
 #particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-
-/* ── LAYOUT ── */
 .app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
 
-/* ── HEADER ── */
-.hdr{background:rgba(3,7,18,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(56,189,248,0.2);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
-.hdr-logo{width:44px;height:44px;border-radius:50%;border:2px solid #38bdf8;display:flex;align-items:center;justify-content:center;position:relative}
-.hdr-logo::before{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(56,189,248,0.3);animation:logoPulse 2s ease-in-out infinite}
-@keyframes logoPulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:1}}
-.hdr-logo svg{width:22px;height:22px}
+/* HEADER */
+.hdr{background:rgba(3,7,18,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(56,189,248,0.18);padding:14px 20px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.hdr-logo{width:46px;height:46px;border-radius:50%;border:2px solid #38bdf8;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.hdr-logo::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid rgba(56,189,248,0.25);animation:logoPulse 2.5s ease-in-out infinite}
+.hdr-logo::after{content:'';position:absolute;inset:-10px;border-radius:50%;border:1px solid rgba(56,189,248,0.1);animation:logoPulse 2.5s ease-in-out infinite .5s}
+@keyframes logoPulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.08);opacity:.9}}
 .hdr-info{flex:1}
-.hdr-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:2px;text-transform:uppercase}
-.hdr-sub{font-size:11px;color:#38bdf8;letter-spacing:1.5px;font-family:'Share Tech Mono',monospace}
-.hdr-status{display:flex;align-items:center;gap:6px;font-size:11px;color:#4ade80;font-family:'Share Tech Mono',monospace;letter-spacing:1px}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:statusBlink 2s ease-in-out infinite}
-@keyframes statusBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+.hdr-title{font-size:18px;font-weight:700;color:#fff;letter-spacing:3px;text-transform:uppercase}
+.hdr-sub{font-size:10px;color:#38bdf8;letter-spacing:2px;font-family:'Share Tech Mono',monospace;margin-top:2px}
+.hdr-status{display:flex;align-items:center;gap:6px;font-size:10px;color:#4ade80;font-family:'Share Tech Mono',monospace;letter-spacing:1px}
+.sdot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:sblink 2s ease-in-out infinite}
+@keyframes sblink{0%,100%{opacity:1}50%{opacity:.2}}
 
-/* ── TABS ── */
-.tabs{background:rgba(3,7,18,0.7);backdrop-filter:blur(10px);border-bottom:1px solid rgba(56,189,248,0.15);display:flex;overflow-x:auto;padding:0 20px}
+/* HUD decorativo */
+.hud{position:fixed;pointer-events:none;z-index:2}
+.hud-tl{top:0;left:0;width:60px;height:60px;border-top:1px solid rgba(56,189,248,0.2);border-left:1px solid rgba(56,189,248,0.2)}
+.hud-tr{top:0;right:0;width:60px;height:60px;border-top:1px solid rgba(56,189,248,0.2);border-right:1px solid rgba(56,189,248,0.2)}
+.hud-bl{bottom:0;left:0;width:60px;height:60px;border-bottom:1px solid rgba(56,189,248,0.2);border-left:1px solid rgba(56,189,248,0.2)}
+.hud-br{bottom:0;right:0;width:60px;height:60px;border-bottom:1px solid rgba(56,189,248,0.2);border-right:1px solid rgba(56,189,248,0.2)}
+
+/* TABS */
+.tabs{background:rgba(3,7,18,0.75);border-bottom:1px solid rgba(56,189,248,0.1);display:flex;overflow-x:auto;padding:0 16px}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:1;min-width:70px;padding:12px 8px;background:transparent;border:none;border-bottom:2px solid transparent;color:#475569;font-size:12px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
-.tab svg{width:18px;height:18px;flex-shrink:0}
-.tab.on{color:#38bdf8;border-bottom-color:#38bdf8;background:rgba(56,189,248,0.06)}
+.tab{flex:1;min-width:65px;padding:11px 6px;background:transparent;border:none;border-bottom:2px solid transparent;color:#475569;font-size:11px;font-weight:700;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:.8px;text-transform:uppercase;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;white-space:nowrap}
+.tab svg{width:17px;height:17px}
+.tab.on{color:#38bdf8;border-bottom-color:#38bdf8;background:rgba(56,189,248,0.05)}
 .tab:hover:not(.on){color:#94a3b8}
 
-/* ── CONTEÚDO ── */
-.body{padding:24px 20px 80px;max-width:600px;margin:0 auto;flex:1}
+/* BODY */
+.body{padding:20px 18px 80px;max-width:560px;margin:0 auto;flex:1}
 .screen{display:none}.screen.active{display:block}
 
-/* ── NOTICE ── */
-.notice{background:rgba(37,99,235,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:12px;padding:12px 16px;font-size:13px;color:#7dd3fc;line-height:1.6;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
-.notice svg{flex-shrink:0;margin-top:1px;width:16px;height:16px}
+/* ORB JARVIS */
+.orb-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}
+#jarvis-canvas{display:block;cursor:pointer;border-radius:50%}
+.orb-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-top:6px;min-height:16px;text-align:center;transition:color .4s}
+.orb-label.idle{color:rgba(56,189,248,0.7)}.orb-label.listening{color:#f87171}
+.orb-label.thinking{color:#a78bfa}.orb-label.speaking{color:#4ade80}
 
-/* ── ESFERA JARVIS ── */
-.orb-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:8px}
-#jarvis-canvas{display:block;cursor:pointer}
-.orb-label{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:8px;min-height:18px;text-align:center;transition:color .3s}
-.orb-label.idle{color:#38bdf8}
-.orb-label.listening{color:#f87171}
-.orb-label.thinking{color:#a78bfa}
-.orb-label.speaking{color:#4ade80}
+/* TRANSCRIPT */
+.transcript{background:rgba(0,0,0,0.35);border:1px solid rgba(56,189,248,0.1);border-radius:10px;padding:10px 14px;font-size:13px;color:#7dd3fc;min-height:40px;margin-bottom:12px;font-family:'Share Tech Mono',monospace;line-height:1.6;transition:border-color .3s}
+.transcript.active{border-color:rgba(248,113,113,0.4)}
+.transcript:empty::before{content:'Toque no microfone e fale à vontade...';color:rgba(148,163,184,0.3);font-style:italic}
 
-/* ── CHAT ── */
-.chat-wrap{width:100%;max-width:500px;margin:0 auto}
-.chat-box{background:rgba(3,7,18,0.6);border:1px solid rgba(56,189,248,0.15);border-radius:16px;padding:16px;max-height:220px;overflow-y:auto;margin-bottom:16px;display:flex;flex-direction:column;gap:10px}
-.chat-box::-webkit-scrollbar{width:4px}.chat-box::-webkit-scrollbar-thumb{background:rgba(56,189,248,0.2);border-radius:2px}
-.msg{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.65;max-width:88%;font-family:'Rajdhani',sans-serif;font-weight:500}
-.msg-g{background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.15);color:#bae6fd;border-radius:4px 12px 12px 12px}
-.msg-u{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);color:#c7d2fe;border-radius:12px 4px 12px 12px;align-self:flex-end}
+/* CHAT */
+.chat-box{background:rgba(3,7,18,0.55);border:1px solid rgba(56,189,248,0.1);border-radius:14px;padding:14px;max-height:220px;overflow-y:auto;margin-bottom:14px;display:flex;flex-direction:column;gap:10px}
+.chat-box::-webkit-scrollbar{width:3px}.chat-box::-webkit-scrollbar-thumb{background:rgba(56,189,248,0.15);border-radius:2px}
+.msg{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.7;max-width:92%;font-weight:500}
+.msg-g{background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.12);color:#bae6fd;border-radius:4px 12px 12px 12px}
+.msg-u{background:rgba(99,102,241,0.09);border:1px solid rgba(99,102,241,0.16);color:#c7d2fe;border-radius:12px 4px 12px 12px;align-self:flex-end}
 
-/* transcrição */
-.transcript{background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.15);border-radius:10px;padding:10px 14px;font-size:13px;color:#7dd3fc;min-height:40px;margin-bottom:16px;font-family:'Share Tech Mono',monospace;line-height:1.6}
-.transcript:empty::before{content:'Aguardando voz...';color:rgba(148,163,184,0.4)}
-
-/* ── BOTÕES ── */
-.btn-row{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:4px}
-.btn-mic{width:80px;height:80px;border-radius:50%;border:3px solid #ef4444;background:rgba(239,68,68,0.08);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative}
-.btn-mic::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(239,68,68,0.3);transition:all .3s}
-.btn-mic.on{border-color:#f87171;background:rgba(239,68,68,0.18);transform:scale(1.05)}
+/* MICROFONE */
+.mic-area{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:16px}
+.btn-mic{width:86px;height:86px;border-radius:50%;border:3px solid #ef4444;background:rgba(239,68,68,0.07);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;position:relative}
+.btn-mic::before{content:'';position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(239,68,68,0.2);transition:all .3s}
+.btn-mic.on{background:rgba(239,68,68,0.16);border-color:#f87171}
 .btn-mic.on::before{animation:micRing 1s ease-out infinite}
-@keyframes micRing{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
-.btn-mic:hover{background:rgba(239,68,68,0.15);transform:scale(1.04)}
-.btn-mic-label{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;color:#f87171;text-transform:uppercase}
-.btn-mic-label.on{color:#fca5a5}
+.btn-mic.speaking-state{border-color:#4ade80;color:#4ade80}
+.btn-mic.speaking-state::before{border-color:rgba(74,222,128,0.3);animation:micRing 1.3s ease-out infinite}
+@keyframes micRing{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+.btn-mic:hover{background:rgba(239,68,68,0.14);transform:scale(1.03)}
+.mic-hint{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#f87171;text-transform:uppercase;transition:color .3s}
+.mic-hint.speaking{color:#4ade80}
+.mic-hint.thinking{color:#a78bfa}
 
-.btn-main{background:linear-gradient(135deg,rgba(21,128,61,0.8),rgba(13,148,136,0.8));border:1px solid rgba(52,211,153,0.4);border-radius:12px;color:#fff;padding:14px 20px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center;width:100%;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all .2s}
-.btn-main:disabled{opacity:.25;cursor:not-allowed}
-.btn-main:not(:disabled):hover{background:linear-gradient(135deg,rgba(22,163,74,0.9),rgba(15,118,110,0.9));transform:translateY(-1px)}
-.btn-sec{background:transparent;border:1px solid rgba(148,163,184,0.2);border-radius:10px;color:#64748b;padding:11px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all .2s;width:100%}
-.btn-sec:hover{border-color:rgba(148,163,184,0.4);color:#94a3b8}
+/* BOTÕES */
+.btn-main{border:none;border-radius:12px;color:#fff;padding:14px 20px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center;width:100%;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all .2s;margin-bottom:8px}
+.btn-green{background:linear-gradient(135deg,rgba(21,128,61,0.85),rgba(13,148,136,0.85));border:1px solid rgba(52,211,153,0.35)}
+.btn-green:disabled{opacity:.2;cursor:not-allowed}
+.btn-green:not(:disabled):hover{transform:translateY(-1px);filter:brightness(1.1)}
+.btn-blue{background:linear-gradient(135deg,rgba(29,78,216,0.85),rgba(14,165,233,0.85));border:1px solid rgba(56,189,248,0.35)}
+.btn-blue:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.btn-sec{background:transparent;border:1px solid rgba(148,163,184,0.18);border-radius:10px;color:#64748b;padding:11px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all .2s;width:100%}
+.btn-sec:hover{border-color:rgba(148,163,184,0.35);color:#94a3b8}
 
-/* ── UPLOAD ── */
-.upload-zone{border:2px dashed rgba(56,189,248,0.25);border-radius:18px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .3s;background:rgba(0,0,0,0.3)}
-.upload-zone:hover,.upload-zone.drag{border-color:rgba(56,189,248,0.6);background:rgba(56,189,248,0.04)}
-.uz-icon{margin-bottom:14px;opacity:.7}
-.uz-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:1px}
-.uz-sub{font-size:13px;color:#475569;margin-bottom:8px;font-family:'Share Tech Mono',monospace}
-.uz-cta{font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:.5px}
+/* ══ PAYWALL ══ */
+.paywall{background:rgba(3,7,18,0.85);border:1px solid rgba(56,189,248,0.2);border-radius:18px;padding:28px 22px;margin-top:8px}
+.pw-icon{text-align:center;margin-bottom:16px}
+.pw-title{font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;text-align:center;margin-bottom:6px}
+.pw-sub{font-size:13px;color:#64748b;text-align:center;margin-bottom:22px;line-height:1.6;font-family:'Share Tech Mono',monospace}
+.pw-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.pw-plan{background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.15);border-radius:12px;padding:16px;cursor:pointer;transition:all .25s;text-align:center}
+.pw-plan:hover{border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.04)}
+.pw-plan.selected{border-color:#38bdf8;background:rgba(56,189,248,0.08)}
+.pw-plan-name{font-size:13px;font-weight:700;color:#e2e8f0;letter-spacing:.5px;margin-bottom:4px}
+.pw-plan-price{font-size:22px;font-weight:700;color:#38bdf8;margin-bottom:4px}
+.pw-plan-desc{font-size:11px;color:#475569;font-family:'Share Tech Mono',monospace;line-height:1.5}
+.pw-plan-badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.25);display:inline-block;margin-bottom:6px;font-family:'Share Tech Mono',monospace;letter-spacing:.5px}
+.pw-divider{border:none;border-top:1px solid rgba(56,189,248,0.08);margin:16px 0}
+.pw-notice{font-size:11px;color:#475569;text-align:center;font-family:'Share Tech Mono',monospace;margin-top:12px;line-height:1.6}
+
+/* ══ PIX QR ══ */
+.pix-box{background:rgba(0,0,0,0.4);border:1px solid rgba(56,189,248,0.15);border-radius:16px;padding:22px;margin-top:8px;text-align:center}
+.pix-status{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.pix-dot{width:8px;height:8px;border-radius:50%;background:#fbbf24;animation:sblink 1s ease-in-out infinite}
+.pix-dot.paid{background:#4ade80;animation:none}
+.pix-label{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#fbbf24}
+.pix-label.paid{color:#4ade80}
+.pix-qr{width:180px;height:180px;background:#fff;border-radius:12px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.pix-qr canvas{display:block}
+.pix-valor{font-size:28px;font-weight:700;color:#38bdf8;margin-bottom:6px}
+.pix-desc{font-size:12px;color:#64748b;font-family:'Share Tech Mono',monospace;margin-bottom:16px}
+.pix-copy{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:10px 16px;font-size:12px;color:#7dd3fc;font-family:'Share Tech Mono',monospace;cursor:pointer;display:flex;align-items:center;gap:8px;justify-content:center;width:100%;margin-bottom:8px;transition:all .2s;letter-spacing:.5px}
+.pix-copy:hover{background:rgba(56,189,248,0.15)}
+.pix-expire{font-size:11px;color:#475569;font-family:'Share Tech Mono',monospace;margin-top:12px}
+.pix-timer{color:#fbbf24;font-weight:700}
+.checking-box{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#a78bfa;letter-spacing:1px}
+.spin-sm{animation:spinSm .8s linear infinite;display:inline-block}
+@keyframes spinSm{to{transform:rotate(360deg)}}
+
+/* ══ UPLOAD CONTRATO ══ */
+.upload-zone{border:2px dashed rgba(56,189,248,0.2);border-radius:16px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .3s;background:rgba(0,0,0,0.25)}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(56,189,248,0.5);background:rgba(56,189,248,0.03)}
+.uz-title{font-size:17px;font-weight:700;color:#fff;margin:10px 0 5px;letter-spacing:.5px}
+.uz-sub{font-size:12px;color:#475569;margin-bottom:6px;font-family:'Share Tech Mono',monospace}
+.uz-cta{font-size:12px;font-weight:700;color:#38bdf8;letter-spacing:.5px}
 input[type=file]{display:none}
-
-/* progresso */
-.prog-card{background:rgba(0,0,0,0.4);border:1px solid rgba(56,189,248,0.15);border-radius:14px;padding:18px;margin-top:18px}
-.prog-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;letter-spacing:.5px}
-.prog-track{height:6px;background:rgba(56,189,248,0.1);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.prog-card{background:rgba(0,0,0,0.35);border:1px solid rgba(56,189,248,0.12);border-radius:14px;padding:16px;margin-top:16px}
+.prog-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace}
+.prog-track{height:5px;background:rgba(56,189,248,0.08);border-radius:3px;overflow:hidden;margin-bottom:8px}
 .prog-fill{height:100%;background:linear-gradient(90deg,#38bdf8,#818cf8);border-radius:3px;transition:width .5s ease;width:0%}
-.prog-msg{font-size:12px;color:#64748b;font-family:'Share Tech Mono',monospace}
-.result-card{margin-top:18px}
-.result-title{font-size:15px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
-.result-text{background:rgba(0,0,0,0.4);border:1px solid rgba(56,189,248,0.12);border-radius:12px;padding:16px;font-size:13px;line-height:1.8;max-height:280px;overflow-y:auto;color:#94a3b8;white-space:pre-wrap;font-family:'Rajdhani',sans-serif;font-weight:500}
-.result-text::-webkit-scrollbar{width:4px}.result-text::-webkit-scrollbar-thumb{background:rgba(56,189,248,0.2);border-radius:2px}
-.warn{background:rgba(180,83,9,0.15);border:1px solid rgba(180,83,9,0.3);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:13px;color:#fcd34d;line-height:1.6;font-family:'Rajdhani',sans-serif;font-weight:500}
-.dl-row{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.prog-msg{font-size:11px;color:#475569;font-family:'Share Tech Mono',monospace}
+.result-card{margin-top:16px}
+.result-title{font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.result-text{background:rgba(0,0,0,0.35);border:1px solid rgba(56,189,248,0.1);border-radius:12px;padding:16px;font-size:13px;line-height:1.8;max-height:260px;overflow-y:auto;color:#94a3b8;white-space:pre-wrap}
+.result-text::-webkit-scrollbar{width:3px}.result-text::-webkit-scrollbar-thumb{background:rgba(56,189,248,0.15);border-radius:2px}
+.warn{background:rgba(120,53,15,0.2);border:1px solid rgba(180,83,9,0.25);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12px;color:#fcd34d;line-height:1.6;font-family:'Rajdhani',sans-serif;font-weight:500}
 
-/* ── LEIS ── */
-.intro-text{font-size:15px;color:#64748b;margin-bottom:18px;line-height:1.7;font-family:'Rajdhani',sans-serif;font-weight:500}
-.law-card{background:rgba(0,0,0,0.35);border:1px solid rgba(56,189,248,0.12);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
-.law-card:hover{border-color:rgba(56,189,248,0.3)}.law-card.open{border-color:rgba(56,189,248,0.5)}
+/* ══ LEIS ══ */
+.intro-text{font-size:14px;color:#475569;margin-bottom:16px;line-height:1.7;font-family:'Rajdhani',sans-serif;font-weight:500}
+.law-card{background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.1);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.law-card:hover{border-color:rgba(56,189,248,0.25)}.law-card.open{border-color:rgba(56,189,248,0.45)}
 .law-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.lbadge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;letter-spacing:.5px;font-family:'Share Tech Mono',monospace}
-.lb-blue{background:rgba(37,99,235,0.2);color:#7dd3fc;border:1px solid rgba(56,189,248,0.25)}
-.lb-green{background:rgba(20,83,45,0.3);color:#86efac;border:1px solid rgba(52,211,153,0.25)}
-.lb-amber{background:rgba(69,26,3,0.4);color:#fcd34d;border:1px solid rgba(251,191,36,0.25)}
-.lb-red{background:rgba(69,10,10,0.4);color:#fca5a5;border:1px solid rgba(239,68,68,0.25)}
-.law-name{font-size:15px;font-weight:700;color:#e2e8f0;margin-top:6px;letter-spacing:.5px}
-.law-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(56,189,248,0.1)}
+.lbadge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;letter-spacing:.5px;font-family:'Share Tech Mono',monospace}
+.lb-blue{background:rgba(37,99,235,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.2)}
+.lb-green{background:rgba(20,83,45,0.25);color:#86efac;border:1px solid rgba(52,211,153,0.2)}
+.lb-amber{background:rgba(69,26,3,0.35);color:#fcd34d;border:1px solid rgba(251,191,36,0.2)}
+.lb-red{background:rgba(69,10,10,0.35);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+.law-name{font-size:15px;font-weight:700;color:#e2e8f0;margin-top:6px;letter-spacing:.3px}
+.law-body{display:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(56,189,248,0.08)}
 .law-card.open .law-body{display:block}
 .law-body p{font-size:14px;color:#64748b;line-height:1.75;margin-bottom:10px;font-family:'Rajdhani',sans-serif;font-weight:500}
 .law-body strong{color:#cbd5e1}
-.defense{background:rgba(5,46,22,0.4);border-left:3px solid #22c55e;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#86efac;line-height:1.65;font-weight:600;font-family:'Rajdhani',sans-serif}
+.defense{background:rgba(5,46,22,0.35);border-left:3px solid #22c55e;border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:#86efac;line-height:1.65;font-weight:600;font-family:'Rajdhani',sans-serif}
 
-/* ── AÇÕES ── */
-.ac-card{background:rgba(0,0,0,0.35);border:1px solid rgba(56,189,248,0.12);border-radius:14px;padding:18px;margin-bottom:12px}
+/* ══ AÇÕES ══ */
+.ac-card{background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.1);border-radius:14px;padding:18px;margin-bottom:12px}
 .ac-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .ac-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ac-title{font-size:16px;font-weight:700;color:#fff;letter-spacing:.5px}
-.ac-when{font-size:12px;color:#475569;margin-top:2px;font-family:'Share Tech Mono',monospace}
+.ac-title{font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px}
+.ac-when{font-size:11px;color:#475569;margin-top:2px;font-family:'Share Tech Mono',monospace}
 .ac-desc{font-size:14px;color:#64748b;line-height:1.7;margin-bottom:12px;font-family:'Rajdhani',sans-serif;font-weight:500}
 .tag-row{display:flex;gap:6px;flex-wrap:wrap}
-.ltag{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(37,99,235,0.15);color:#93c5fd;border:1px solid rgba(56,189,248,0.2);font-family:'Share Tech Mono',monospace}
-.free-tag{font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;background:rgba(20,83,45,0.3);color:#86efac;border:1px solid rgba(52,211,153,0.25);letter-spacing:.3px;font-family:'Share Tech Mono',monospace}
+.ltag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(37,99,235,0.12);color:#93c5fd;border:1px solid rgba(56,189,248,0.18);font-family:'Share Tech Mono',monospace}
+.free-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(20,83,45,0.25);color:#86efac;border:1px solid rgba(52,211,153,0.2);font-family:'Share Tech Mono',monospace}
+.notice{background:rgba(37,99,235,0.08);border:1px solid rgba(56,189,248,0.2);border-radius:10px;padding:12px 14px;font-size:13px;color:#7dd3fc;line-height:1.6;margin-bottom:16px;display:flex;gap:9px;align-items:flex-start;font-family:'Rajdhani',sans-serif;font-weight:500}
+.notice svg{flex-shrink:0;margin-top:1px;width:15px;height:15px}
 
-/* ── HUD CORNERS (decoração) ── */
-.hud{position:fixed;pointer-events:none;z-index:2}
-.hud-tl{top:0;left:0;width:80px;height:80px;border-top:1px solid rgba(56,189,248,0.25);border-left:1px solid rgba(56,189,248,0.25)}
-.hud-tr{top:0;right:0;width:80px;height:80px;border-top:1px solid rgba(56,189,248,0.25);border-right:1px solid rgba(56,189,248,0.25)}
-.hud-bl{bottom:0;left:0;width:80px;height:80px;border-bottom:1px solid rgba(56,189,248,0.25);border-left:1px solid rgba(56,189,248,0.25)}
-.hud-br{bottom:0;right:0;width:80px;height:80px;border-bottom:1px solid rgba(56,189,248,0.25);border-right:1px solid rgba(56,189,248,0.25)}
+/* SUCCESS */
+.success-box{background:rgba(5,46,22,0.3);border:1px solid rgba(52,211,153,0.3);border-radius:16px;padding:24px;text-align:center;margin-top:8px}
+.success-icon{margin-bottom:12px}
+.success-title{font-size:20px;font-weight:700;color:#4ade80;letter-spacing:1px;margin-bottom:6px}
+.success-sub{font-size:13px;color:#64748b;font-family:'Share Tech Mono',monospace;margin-bottom:20px;line-height:1.6}
 </style>
 </head>
 <body>
 
-<!-- Partículas de fundo -->
 <canvas id="particles"></canvas>
-
-<!-- HUD decorativo -->
-<div class="hud hud-tl"></div>
-<div class="hud hud-tr"></div>
-<div class="hud hud-bl"></div>
-<div class="hud hud-br"></div>
+<div class="hud hud-tl"></div><div class="hud hud-tr"></div>
+<div class="hud hud-bl"></div><div class="hud hud-br"></div>
 
 <div class="app">
 
-  <!-- HEADER -->
   <header class="hdr">
     <div class="hdr-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.8">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     </div>
     <div class="hdr-info">
       <div class="hdr-title">Guardian IA</div>
-      <div class="hdr-sub">Sistema de defesa jurídica · MCMV</div>
+      <div class="hdr-sub">Perito Jurídico · MCMV · Especialista</div>
     </div>
-    <div class="hdr-status">
-      <div class="status-dot"></div>
-      ONLINE
-    </div>
+    <div class="hdr-status"><div class="sdot"></div>ONLINE</div>
   </header>
 
-  <!-- TABS -->
   <nav class="tabs">
     <button class="tab on" onclick="goTab('voz',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-      Assistente
+      Consulta
     </button>
     <button class="tab" onclick="goTab('contrato',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -196,34 +222,116 @@ input[type=file]{display:none}
 
   <main class="body">
 
-    <!-- ══ ABA ASSISTENTE ══ -->
+    <!-- ══════════ ABA CONSULTA ══════════ -->
     <section id="tab-voz" class="screen active">
 
       <div class="orb-wrap">
-        <canvas id="jarvis-canvas" width="260" height="260" onclick="toggleMic()" title="Toque para falar"></canvas>
-        <div class="orb-label idle" id="orb-label">AGUARDANDO COMANDO</div>
+        <canvas id="jarvis-canvas" width="240" height="240" onclick="toggleMic()" title="Toque para falar"></canvas>
+        <div class="orb-label idle" id="orb-label">SISTEMA PRONTO</div>
       </div>
 
-      <div class="chat-wrap">
-        <div class="transcript" id="vtranscript"></div>
-        <div class="chat-box" id="vchat">
-          <div class="msg msg-g">Sistema Guardian IA online. Sou seu assessor jurídico especializado em MCMV. Toque na esfera ou no microfone e descreva sua situação — dias de atraso, motivo, e se recebeu notificação do banco. Estou pronto para analisar.</div>
+      <div class="transcript" id="vtranscript"></div>
+
+      <div class="chat-box" id="vchat">
+        <div class="msg msg-g">...</div>
+      </div>
+
+      <!-- Pagamento e download -->
+      <div id="area-pagamento">
+        <!-- Estado: pronto para gerar plano -->
+        <div id="area-btn-pagar" style="display:none">
+          <button class="btn-main btn-blue" onclick="abrirPaywall()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Obter Plano de Ação Completo
+          </button>
         </div>
-        <div class="btn-row">
-          <button class="btn-main" id="vbtn-pdf" onclick="dlVozPDF()" disabled>
+
+        <!-- Paywall -->
+        <div class="paywall" id="paywall" style="display:none">
+          <div class="pw-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="pw-title">Plano de Ação Guardian IA</div>
+          <div class="pw-sub">Escolha o serviço que precisa. Pagamento via PIX — liberação imediata.</div>
+
+          <div class="pw-plans">
+            <div class="pw-plan" id="plan-voz" onclick="selecionarPlano('voz',29.90,'Plano de Ação por Voz')">
+              <div class="pw-plan-name">Plano por Voz</div>
+              <div class="pw-plan-price">R$ 29,90</div>
+              <div class="pw-plan-desc">Plano gerado a partir da sua consulta</div>
+            </div>
+            <div class="pw-plan" id="plan-contrato" onclick="selecionarPlano('contrato',67.90,'Análise de Contrato')">
+              <div class="pw-plan-badge">MAIS COMPLETO</div>
+              <div class="pw-plan-name">Análise Contrato</div>
+              <div class="pw-plan-price">R$ 67,90</div>
+              <div class="pw-plan-desc">Análise jurídica do PDF do contrato</div>
+            </div>
+          </div>
+
+          <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(56,189,248,0.12);border-radius:12px;padding:14px;margin-bottom:16px">
+            <div style="font-size:12px;color:#64748b;font-family:'Share Tech Mono',monospace;margin-bottom:10px;letter-spacing:.5px">SEUS DADOS PARA ENVIO</div>
+            <input id="inp-nome" type="text" placeholder="Seu nome completo" style="width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(56,189,248,0.15);border-radius:8px;padding:11px 14px;color:#e2e8f0;font-size:14px;font-family:'Rajdhani',sans-serif;margin-bottom:8px;outline:none">
+            <input id="inp-email" type="email" placeholder="E-mail (receberá o PDF)" style="width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(56,189,248,0.15);border-radius:8px;padding:11px 14px;color:#e2e8f0;font-size:14px;font-family:'Rajdhani',sans-serif;outline:none">
+          </div>
+
+          <button class="btn-main btn-blue" onclick="gerarCobrancaAsaas()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Gerar PIX
+          </button>
+          <button class="btn-sec" onclick="fecharPaywall()">Cancelar</button>
+          <div class="pw-notice">🔒 Pagamento seguro via Asaas · PIX instantâneo<br>PDF liberado automaticamente após confirmação</div>
+        </div>
+
+        <!-- PIX gerado -->
+        <div class="pix-box" id="pix-box" style="display:none">
+          <div class="pix-status">
+            <div class="pix-dot" id="pix-dot"></div>
+            <div class="pix-label" id="pix-label">AGUARDANDO PAGAMENTO</div>
+          </div>
+          <div class="pix-valor" id="pix-valor"></div>
+          <div class="pix-desc">Escaneie o QR Code ou copie o código PIX</div>
+          <div class="pix-qr" id="pix-qr">
+            <canvas id="qr-canvas" width="160" height="160"></canvas>
+          </div>
+          <button class="pix-copy" onclick="copiarPix()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span id="pix-copy-label">COPIAR CÓDIGO PIX</span>
+          </button>
+          <div class="checking-box">
+            <span class="spin-sm">⟳</span>
+            VERIFICANDO PAGAMENTO AUTOMATICAMENTE...
+          </div>
+          <div class="pix-expire">Código expira em <span class="pix-timer" id="pix-timer">15:00</span></div>
+        </div>
+
+        <!-- Sucesso -->
+        <div class="success-box" id="success-box" style="display:none">
+          <div class="success-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="success-title">PAGAMENTO CONFIRMADO</div>
+          <div class="success-sub">Seu plano de ação está pronto.<br>Download iniciando automaticamente.</div>
+          <button class="btn-main btn-green" id="btn-dl-final" onclick="downloadFinal()">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Baixar Plano de Ação PDF
           </button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <div class="mic-area" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
           <button class="btn-mic" id="vmic" onclick="toggleMic()">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
           </button>
-          <div class="btn-mic-label" id="mic-label">TOQUE PARA FALAR</div>
+          <div class="mic-hint" id="mic-hint">TOQUE PARA FALAR</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center">
           <button class="btn-sec" onclick="resetVoz()">Nova Consulta</button>
         </div>
       </div>
     </section>
 
-    <!-- ══ ABA CONTRATO ══ -->
+    <!-- ══════════ ABA CONTRATO ══════════ -->
     <section id="tab-contrato" class="screen">
       <div class="notice">
         <svg viewBox="0 0 24 24" fill="none" stroke="#7dd3fc" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -235,18 +343,16 @@ input[type=file]{display:none}
            ondragover="event.preventDefault();this.classList.add('drag')"
            ondragleave="this.classList.remove('drag')"
            ondrop="event.preventDefault();this.classList.remove('drag');loadPDF({files:event.dataTransfer.files})">
-        <div class="uz-icon">
-          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-        </div>
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.3" style="opacity:.65"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
         <div class="uz-title">Enviar PDF do Contrato</div>
         <div class="uz-sub">Toque aqui ou arraste · Máx. 10MB</div>
-        <div class="uz-cta">Guardian IA vai identificar problemas e gerar seu plano</div>
+        <div class="uz-cta">Guardian analisa cláusulas e gera plano de ação</div>
       </div>
       <div id="pwrap" style="display:none">
         <div class="prog-card">
           <div class="prog-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-            <span id="pfname" style="color:#38bdf8"></span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <span id="pfname" style="color:#38bdf8;font-size:12px"></span>
           </div>
           <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
           <div class="prog-msg" id="pmsg">Inicializando...</div>
@@ -254,109 +360,90 @@ input[type=file]{display:none}
         <div id="presult" class="result-card" style="display:none">
           <div class="result-title">// Análise Guardian IA</div>
           <div id="ptext" class="result-text"></div>
-          <div class="warn">⚠ Documento informativo gerado por IA. Consulte a Defensoria Pública ou um advogado antes de protocolar qualquer ação.</div>
-          <div class="dl-row">
-            <button class="btn-main" onclick="dlAnalisePDF()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Baixar Plano de Ação PDF
+          <div class="warn">⚠ Análise informativa gerada por IA. Consulte a Defensoria Pública ou advogado antes de protocolar qualquer ação.</div>
+          <div style="margin-top:14px">
+            <button class="btn-main btn-blue" onclick="abrirPaywallContrato()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Obter Plano de Ação do Contrato
             </button>
-            <button class="btn-sec" onclick="resetContrato()">Analisar Outro Contrato</button>
+            <button class="btn-sec" onclick="resetContrato()" style="margin-top:8px">Analisar outro contrato</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══ ABA DIREITOS ══ -->
+    <!-- ══════════ ABA DIREITOS ══════════ -->
     <section id="tab-leis" class="screen">
-      <p class="intro-text">Legislação aplicável ao seu caso. Toque para expandir cada norma e ver o argumento de defesa.</p>
+      <p class="intro-text">Legislação que protege o mutuário MCMV. Toque para expandir.</p>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-blue">LEI 9.514/97</span><div class="law-name">Alienação Fiduciária</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Regula como o banco pode ou não tomar seu imóvel. Base legal de todo contrato MCMV.</p><p><strong>Art. 26:</strong> O banco é obrigado a notificar pessoalmente o mutuário e conceder 15 dias para pagar antes de qualquer leilão. Sem notificação correta, o processo é nulo.</p><div class="defense">// Defesa: questione a regularidade da notificação. Irregularidade = processo inteiro anulado.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-blue">LEI 9.514/97</span><div class="law-name">Alienação Fiduciária</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Base legal de todo contrato MCMV. Regula como o banco pode ou não tomar seu imóvel.</p><p><strong>Art. 26:</strong> O banco é obrigado a notificar pessoalmente o mutuário e conceder 15 dias para pagar antes de qualquer leilão. Notificação irregular = processo nulo.</p><div class="defense">// Defesa: questione a regularidade da notificação. Irregularidade anula o processo inteiro.</div></div>
       </div>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-green">LEI 14.620/2023</span><div class="law-name">MCMV — Proteções Especiais</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Lei do programa MCMV renovado. Famílias de baixa renda têm proteções especiais antes de qualquer execução.</p><p><strong>Faixa 1 (até R$ 2.850):</strong> Parcela não pode comprometer mais de 10–15% da renda. Banco obrigado a oferecer alternativas.</p><div class="defense">// Defesa: renda caiu? Peça reenquadramento de faixa e redução da parcela com base nessa lei.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-green">LEI 14.620/2023</span><div class="law-name">MCMV — Proteções Especiais</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Lei do MCMV renovado. Famílias de baixa renda têm proteção especial — banco obrigado a oferecer alternativas antes de qualquer execução.</p><p><strong>Faixa 1 (até R$ 2.850):</strong> Parcela não pode comprometer mais de 10–15% da renda familiar.</p><div class="defense">// Defesa: renda caiu? Peça reenquadramento de faixa e redução da parcela com base nessa lei.</div></div>
       </div>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-amber">CF/88 — ART. 6º</span><div class="law-name">Direito Fundamental à Moradia</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Moradia é direito fundamental garantido pela Constituição. O Art. 5º, XXIII estabelece a função social da propriedade.</p><p>Um juiz pode suspender leilão quando família comprovadamente ficará sem onde morar, especialmente com crianças ou idosos.</p><div class="defense">// Defesa: demonstre vulnerabilidade familiar. Função social da propriedade prevalece.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-amber">CF/88 — ART. 6º</span><div class="law-name">Direito Fundamental à Moradia</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Moradia é direito fundamental garantido pela Constituição. Art. 5º, XXIII — função social da propriedade.</p><p>Juiz pode suspender leilão quando família ficará sem onde morar, especialmente com crianças ou idosos.</p><div class="defense">// Defesa: demonstre vulnerabilidade familiar. Função social da propriedade prevalece.</div></div>
       </div>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-red">CDC — LEI 8.078/90</span><div class="law-name">Código de Defesa do Consumidor</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Você é consumidor. O CDC proíbe cláusulas abusivas: multa acima de 2%, capitalização de juros ilegal, taxas não informadas.</p><p><strong>Art. 42:</strong> Valor cobrado indevidamente deve ser devolvido em dobro.</p><div class="defense">// Defesa: identifique cláusulas abusivas. Abusividade descaracteriza a mora — execução para.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-red">CDC — LEI 8.078/90</span><div class="law-name">Código de Defesa do Consumidor</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Você é consumidor. CDC proíbe cláusulas abusivas: multa acima de 2%, capitalização ilegal, taxas não informadas.</p><p><strong>Art. 42:</strong> Valor cobrado indevidamente deve ser devolvido em dobro.</p><div class="defense">// Defesa: abusividade comprovada descaracteriza a mora — execução para imediatamente.</div></div>
       </div>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-blue">CC/2002 — ARTS. 478-480</span><div class="law-name">Teoria da Imprevisão</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Eventos imprevisíveis — desemprego súbito, doença grave, morte do titular — permitem revisão judicial do contrato.</p><p>O que era possível pagar antes deixou de ser por razões fora do seu controle.</p><div class="defense">// Defesa: comprove o evento (carta de demissão, atestado médico) e peça revisão das parcelas.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-blue">CC/2002 — ARTS. 478-480</span><div class="law-name">Teoria da Imprevisão</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Eventos imprevisíveis — desemprego, doença grave, morte do titular — permitem revisão judicial do contrato.</p><div class="defense">// Defesa: comprove o evento com documentos e peça revisão judicial das parcelas.</div></div>
       </div>
 
       <div class="law-card" onclick="this.classList.toggle('open')">
-        <div class="law-head"><div><span class="lbadge lb-green">LEI 9.298/96</span><div class="law-name">Limite de Multa Moratória — 2%</div></div><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-        <div class="law-body"><p>Multa por atraso em financiamento habitacional está limitada a 2% do valor da parcela. Multa acima disso é ilegal.</p><p>Contratos antigos costumam cobrar 10% ou mais — diferença deve ser devolvida.</p><div class="defense">// Defesa: calcule a multa cobrada. Se acima de 2%, peça revisão e restituição em dobro.</div></div>
+        <div class="law-head"><div><span class="lbadge lb-green">LEI 9.298/96</span><div class="law-name">Multa Máxima de 2%</div></div><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <div class="law-body"><p>Multa por atraso em financiamento habitacional limitada a 2%. Acima disso é ilegal e deve ser devolvida em dobro.</p><div class="defense">// Defesa: calcule a multa cobrada. Se acima de 2%, peça revisão e restituição.</div></div>
       </div>
     </section>
 
-    <!-- ══ ABA O QUE FAZER ══ -->
+    <!-- ══════════ ABA O QUE FAZER ══════════ -->
     <section id="tab-acoes" class="screen">
       <p class="intro-text">Ações disponíveis por ordem de urgência. Quanto antes agir, maiores as chances.</p>
 
       <div class="ac-card">
         <div class="ac-head">
-          <div class="ac-icon" style="background:rgba(69,10,10,0.5);border:1px solid rgba(239,68,68,0.3)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
+          <div class="ac-icon" style="background:rgba(69,10,10,.45);border:1px solid rgba(239,68,68,.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
           <div><div class="ac-title">Tutela de Urgência</div><div class="ac-when">// leilão marcado · execução em andamento</div></div>
         </div>
-        <div class="ac-desc">Medida mais rápida. Juiz pode suspender o leilão ou tomada do imóvel em horas. Procure a Defensoria Pública imediatamente — prazo pode ser de dias.</div>
+        <div class="ac-desc">Medida mais rápida. Juiz pode suspender o leilão em horas. Procure a Defensoria Pública imediatamente — prazo pode ser de dias.</div>
         <div class="tag-row"><span class="ltag">CPC Art. 300</span><span class="ltag">Urgência</span></div>
       </div>
 
       <div class="ac-card">
         <div class="ac-head">
-          <div class="ac-icon" style="background:rgba(23,37,84,0.5);border:1px solid rgba(56,189,248,0.3)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4M14 2v6h6"/></svg>
-          </div>
+          <div class="ac-icon" style="background:rgba(23,37,84,.45);border:1px solid rgba(56,189,248,.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M9 13h6M9 17h4M14 2v6h6"/></svg></div>
           <div><div class="ac-title">Ação Revisional</div><div class="ac-when">// juros abusivos · multas ilegais</div></div>
         </div>
-        <div class="ac-desc">Pede revisão judicial das cláusulas. Se provada abusividade, a mora é descaracterizada e a execução para durante o processo.</div>
+        <div class="ac-desc">Revisão judicial das cláusulas. Abusividade comprovada descaracteriza a mora e para a execução durante o processo.</div>
         <div class="tag-row"><span class="ltag">CDC Art. 51</span><span class="ltag">Lei 9.514/97</span><span class="ltag">CC Art. 478</span></div>
       </div>
 
       <div class="ac-card">
         <div class="ac-head">
-          <div class="ac-icon" style="background:rgba(5,46,22,0.5);border:1px solid rgba(52,211,153,0.3)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          </div>
+          <div class="ac-icon" style="background:rgba(5,46,22,.45);border:1px solid rgba(52,211,153,.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
           <div><div class="ac-title">Consignação em Pagamento</div><div class="ac-when">// banco recusa receber</div></div>
         </div>
-        <div class="ac-desc">Deposita as parcelas na Justiça. Prova que tentou pagar e suspende negativação e execução enquanto o processo corre.</div>
+        <div class="ac-desc">Deposita parcelas na Justiça. Prova boa-fé e suspende negativação e execução enquanto o processo corre.</div>
         <div class="tag-row"><span class="ltag">CPC Art. 539</span><span class="ltag">CC Art. 334</span></div>
       </div>
 
-      <div class="ac-card">
+      <div class="ac-card" style="border-color:rgba(52,211,153,.2)">
         <div class="ac-head">
-          <div class="ac-icon" style="background:rgba(69,26,3,0.5);border:1px solid rgba(251,191,36,0.3)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          </div>
-          <div><div class="ac-title">Anulatória de Consolidação</div><div class="ac-when">// notificação irregular</div></div>
-        </div>
-        <div class="ac-desc">Se o banco não notificou corretamente antes de tomar o imóvel, o processo é anulável. Guarde todos os documentos e correspondências.</div>
-        <div class="tag-row"><span class="ltag">Lei 9.514/97 Art. 26</span></div>
-      </div>
-
-      <div class="ac-card" style="border-color:rgba(52,211,153,0.25)">
-        <div class="ac-head">
-          <div class="ac-icon" style="background:rgba(5,46,22,0.5);border:1px solid rgba(52,211,153,0.3)">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
+          <div class="ac-icon" style="background:rgba(5,46,22,.45);border:1px solid rgba(52,211,153,.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <div><div class="ac-title">Defensoria Pública</div><div class="ac-when">// sem custo · direito constitucional</div></div>
         </div>
-        <div class="ac-desc">Totalmente gratuita. Leve o contrato, comprovante de renda e notificações recebidas. A Defensoria entra com todas as ações acima sem custo.</div>
+        <div class="ac-desc">Totalmente gratuita. Leve contrato, comprovante de renda e notificações. Entra com todas as ações acima sem custo.</div>
         <div class="tag-row"><span class="free-tag">GRATUITO</span><span class="ltag">CF/88 Art. 134</span></div>
       </div>
     </section>
@@ -365,584 +452,736 @@ input[type=file]{display:none}
 </div>
 
 <script>
-// ══════════════════════════════════════════
-//  ESFERA DE PARTÍCULAS — estilo Jarvis / Nectar
-// ══════════════════════════════════════════
-const jarvisCanvas = document.getElementById('jarvis-canvas');
-const jctx = jarvisCanvas.getContext('2d');
-const W = 260, H2 = 260, CX = W/2, CY = H2/2, R = 90;
-let orbState = 'idle';
-let particles = [];
-let animFrame;
+// ═══════════════════════════════════════════════════
+//  CONFIGURAÇÕES — PREENCHA ANTES DE USAR
+// ═══════════════════════════════════════════════════
+const CONFIG = {
+  // Asaas: crie conta em app.asaas.com → API Keys → copie a chave
+  // NUNCA exponha essa chave em produção pública — use um backend/proxy
+  ASAAS_KEY:       '$aact_prod_000MzkwODA2MWY2OGM3MWRlMDU2NWM3MzJlNzZmNGZhZGY6OmRhOWQ4ODNlLTY4ZGItNDQzNS1iYjNkLTg1ZmU4ODFkMmE0OTo6JGFhY2hfOWFiNjYwZjEtZjBkNS00OWZlLTliZDItZTlkOTBhYThkNDJk',
+  ASAAS_SANDBOX:   true,   // true = testes | false = produção real
 
-function buildParticles() {
-  particles = [];
-  const count = 280;
-  for (let i = 0; i < count; i++) {
-    const phi   = Math.acos(1 - 2 * (i + 0.5) / count);
-    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-    const r = R * (0.7 + Math.random() * 0.35);
-    particles.push({
-      ox: Math.sin(phi) * Math.cos(theta),
-      oy: Math.sin(phi) * Math.sin(theta),
-      oz: Math.cos(phi),
-      r,
-      speed: 0.0003 + Math.random() * 0.0004,
-      phase: Math.random() * Math.PI * 2,
-      size:  0.8 + Math.random() * 1.6
+  // Preços (em reais)
+  PRECO_VOZ:       29.90,
+  PRECO_CONTRATO:  67.90,
+
+  // Tempo limite do PIX em segundos
+  PIX_EXPIRA:      900,     // 15 minutos
+
+  // Intervalo de verificação do pagamento (ms)
+  CHECK_INTERVAL:  4000,
+};
+
+// URL base Asaas
+const ASAAS_URL = CONFIG.ASAAS_SANDBOX
+  ? 'https://sandbox.asaas.com/api/v3'
+  : 'https://api.asaas.com/api/v3';
+
+// ═══════════════════════════════════════════════════
+//  ESFERA JARVIS
+// ═══════════════════════════════════════════════════
+const jc = document.getElementById('jarvis-canvas');
+const jx = jc.getContext('2d');
+const JW = 240, JH = 240, JCX = JW/2, JCY = JH/2, JR = 86;
+let orbState = 'idle', pts = [], jt = 0;
+
+(function buildPts(){
+  for(let i=0;i<260;i++){
+    const phi = Math.acos(1 - 2*(i+.5)/260);
+    const theta = Math.PI*(1+Math.sqrt(5))*i;
+    pts.push({
+      ox:Math.sin(phi)*Math.cos(theta), oy:Math.sin(phi)*Math.sin(theta), oz:Math.cos(phi),
+      r: JR*(0.72+Math.random()*.3), sz:.8+Math.random()*1.5, ph:Math.random()*Math.PI*2
     });
   }
-}
+})();
 
-function drawOrb(t) {
-  jctx.clearRect(0, 0, W, H2);
+const ORB_COLORS = {
+  idle:      'rgba(56,189,248,',
+  listening: 'rgba(248,113,113,',
+  thinking:  'rgba(167,139,250,',
+  speaking:  'rgba(74,222,128,'
+};
 
-  const stateColors = {
-    idle:      { core:'rgba(56,189,248,', lines:'rgba(56,189,248,', glow:'rgba(56,189,248,0.15)' },
-    listening: { core:'rgba(248,113,113,', lines:'rgba(248,113,113,', glow:'rgba(239,68,68,0.2)' },
-    thinking:  { core:'rgba(167,139,250,', lines:'rgba(167,139,250,', glow:'rgba(139,92,246,0.2)' },
-    speaking:  { core:'rgba(74,222,128,',  lines:'rgba(74,222,128,',  glow:'rgba(34,197,94,0.2)' }
-  };
-  const sc = stateColors[orbState] || stateColors.idle;
-  const pulse = orbState === 'listening' ? 0.15 * Math.sin(t * 0.008) : 0;
-  const scale = 1 + pulse;
-
-  // Glow central
-  const grd = jctx.createRadialGradient(CX, CY, 0, CX, CY, R * 0.6);
-  grd.addColorStop(0, sc.glow);
-  grd.addColorStop(1, 'transparent');
-  jctx.fillStyle = grd;
-  jctx.beginPath();
-  jctx.arc(CX, CY, R * 0.7, 0, Math.PI * 2);
-  jctx.fill();
-
-  // Rotação
-  const rotY = t * 0.0004;
-  const rotX = t * 0.00015;
-  const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
-  const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-
-  // Projetar partículas
-  const projected = particles.map((p, idx) => {
-    const breath = 1 + 0.06 * Math.sin(t * 0.002 + p.phase);
-    let x = p.ox, y = p.oy, z = p.oz;
-    // Rotate Y
-    let nx = x * cosY + z * sinY;
-    let nz = -x * sinY + z * cosY;
-    x = nx; z = nz;
-    // Rotate X
-    let ny = y * cosX - z * sinX;
-    nz     = y * sinX + z * cosX;
-    y = ny; z = nz;
-    const depth = (z + 1) / 2;
-    const pr = p.r * breath * scale;
-    const px = CX + x * pr;
-    const py = CY + y * pr;
-    return { px, py, z, depth, size: p.size, idx };
-  });
-
-  // Ordenar por profundidade
-  projected.sort((a, b) => a.z - b.z);
-
-  // Linhas entre partículas próximas
-  const maxDist = 38;
-  for (let i = 0; i < projected.length; i++) {
-    for (let j = i + 1; j < projected.length; j++) {
-      const dx = projected[i].px - projected[j].px;
-      const dy = projected[i].py - projected[j].py;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < maxDist) {
-        const alpha = (1 - dist / maxDist) * 0.25 * projected[i].depth;
-        jctx.beginPath();
-        jctx.moveTo(projected[i].px, projected[i].py);
-        jctx.lineTo(projected[j].px, projected[j].py);
-        jctx.strokeStyle = sc.lines + alpha + ')';
-        jctx.lineWidth = 0.5;
-        jctx.stroke();
+function drawOrb(){
+  jx.clearRect(0,0,JW,JH);
+  const sc = ORB_COLORS[orbState]||ORB_COLORS.idle;
+  const g = jx.createRadialGradient(JCX,JCY,0,JCX,JCY,JR*.65);
+  g.addColorStop(0, sc+'0.12)'); g.addColorStop(1,'transparent');
+  jx.fillStyle=g; jx.beginPath(); jx.arc(JCX,JCY,JR*.75,0,Math.PI*2); jx.fill();
+  const ry=jt*.00038, rx=jt*.00013;
+  const cy=Math.cos(ry),sy=Math.sin(ry), cx=Math.cos(rx),sx=Math.sin(rx);
+  const proj = pts.map(p=>{
+    const br = 1+.055*Math.sin(jt*.0022+p.ph);
+    let x=p.ox,y=p.oy,z=p.oz;
+    let nx=x*cy+z*sy, nz=-x*sy+z*cy; x=nx; z=nz;
+    let ny=y*cx-z*sx, nz2=y*sx+z*cx; y=ny; z=nz2;
+    const pr=p.r*br;
+    return {px:JCX+x*pr,py:JCY+y*pr,z,d:(z+1)/2,sz:p.sz};
+  }).sort((a,b)=>a.z-b.z);
+  const md=34;
+  for(let i=0;i<proj.length;i++){
+    for(let j=i+1;j<proj.length;j++){
+      const dx=proj[i].px-proj[j].px, dy=proj[i].py-proj[j].py;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<md){
+        const a=(1-dist/md)*.22*proj[i].d;
+        jx.beginPath(); jx.moveTo(proj[i].px,proj[i].py); jx.lineTo(proj[j].px,proj[j].py);
+        jx.strokeStyle=sc+a+')'; jx.lineWidth=.5; jx.stroke();
       }
     }
   }
-
-  // Pontos
-  projected.forEach(p => {
-    const alpha = 0.4 + p.depth * 0.6;
-    const size  = p.size * (0.5 + p.depth * 0.6);
-    jctx.beginPath();
-    jctx.arc(p.px, p.py, size, 0, Math.PI * 2);
-    jctx.fillStyle = sc.core + alpha + ')';
-    jctx.fill();
+  proj.forEach(p=>{
+    jx.beginPath(); jx.arc(p.px,p.py,p.sz*(.5+p.d*.55),0,Math.PI*2);
+    jx.fillStyle=sc+(.35+p.d*.65)+')'; jx.fill();
   });
-
-  // Anel exterior
-  jctx.beginPath();
-  jctx.arc(CX, CY, R + 8, 0, Math.PI * 2);
-  jctx.strokeStyle = sc.core + '0.2)';
-  jctx.lineWidth = 1;
-  jctx.stroke();
-
-  jctx.beginPath();
-  jctx.arc(CX, CY, R + 14, 0, Math.PI * 2);
-  jctx.strokeStyle = sc.core + '0.08)';
-  jctx.lineWidth = 0.5;
-  jctx.stroke();
+  jx.beginPath(); jx.arc(JCX,JCY,JR+7,0,Math.PI*2);
+  jx.strokeStyle=sc+'.18)'; jx.lineWidth=1; jx.stroke();
+  jx.beginPath(); jx.arc(JCX,JCY,JR+13,0,Math.PI*2);
+  jx.strokeStyle=sc+'.07)'; jx.lineWidth=.5; jx.stroke();
 }
+(function anim(){ jt++; drawOrb(); requestAnimationFrame(anim); })();
 
-let animT = 0;
-function animateOrb() {
-  animT += 1;
-  drawOrb(animT);
-  animFrame = requestAnimationFrame(animateOrb);
+// BG partículas
+const bgC = document.getElementById('particles');
+const bgX = bgC.getContext('2d');
+let bgP = [];
+function initBg(){
+  bgC.width=innerWidth; bgC.height=innerHeight;
+  bgP=Array.from({length:70},()=>({x:Math.random()*bgC.width,y:Math.random()*bgC.height,r:.4+Math.random()*.9,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,a:.08+Math.random()*.22}));
 }
-
-buildParticles();
-animateOrb();
-
-// ══════════════════════════════════════════
-//  PARTÍCULAS DE FUNDO
-// ══════════════════════════════════════════
-const bgCanvas = document.getElementById('particles');
-const bgCtx    = bgCanvas.getContext('2d');
-let bgParticles = [];
-
-function resizeBg() {
-  bgCanvas.width  = window.innerWidth;
-  bgCanvas.height = window.innerHeight;
-}
-
-function initBg() {
-  resizeBg();
-  bgParticles = Array.from({length: 80}, () => ({
-    x: Math.random() * bgCanvas.width,
-    y: Math.random() * bgCanvas.height,
-    r: 0.5 + Math.random() * 1.2,
-    vx: (Math.random() - 0.5) * 0.15,
-    vy: (Math.random() - 0.5) * 0.15,
-    alpha: 0.1 + Math.random() * 0.3
-  }));
-}
-
-function animateBg() {
-  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-  bgParticles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = bgCanvas.width;
-    if (p.x > bgCanvas.width) p.x = 0;
-    if (p.y < 0) p.y = bgCanvas.height;
-    if (p.y > bgCanvas.height) p.y = 0;
-    bgCtx.beginPath();
-    bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    bgCtx.fillStyle = `rgba(56,189,248,${p.alpha})`;
-    bgCtx.fill();
+function animBg(){
+  bgX.clearRect(0,0,bgC.width,bgC.height);
+  bgP.forEach(p=>{
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=bgC.width; if(p.x>bgC.width)p.x=0;
+    if(p.y<0)p.y=bgC.height; if(p.y>bgC.height)p.y=0;
+    bgX.beginPath(); bgX.arc(p.x,p.y,p.r,0,Math.PI*2);
+    bgX.fillStyle=`rgba(56,189,248,${p.a})`; bgX.fill();
   });
-  requestAnimationFrame(animateBg);
+  requestAnimationFrame(animBg);
+}
+initBg(); animBg();
+window.addEventListener('resize',initBg);
+
+// ═══════════════════════════════════════════════════
+//  ESTADO VISUAL
+// ═══════════════════════════════════════════════════
+function setOrb(s){
+  orbState=s;
+  const lbl=document.getElementById('orb-label');
+  const mic=document.getElementById('vmic');
+  const hint=document.getElementById('mic-hint');
+  const labels={idle:'SISTEMA PRONTO',listening:'OUVINDO...',thinking:'ANALISANDO...',speaking:'GUARDIAN FALANDO'};
+  const hintMap={idle:'TOQUE PARA FALAR',listening:'OUVINDO — TOQUE PARA PARAR',thinking:'PROCESSANDO...',speaking:'TOQUE PARA PARAR'};
+  lbl.textContent=labels[s]||''; lbl.className='orb-label '+s;
+  hint.textContent=hintMap[s]||''; hint.className='mic-hint '+(s==='speaking'?'speaking':s==='thinking'?'thinking':'');
+  mic.className='btn-mic'+(s==='listening'?' on':s==='speaking'?' speaking-state':'');
 }
 
-initBg();
-animateBg();
-window.addEventListener('resize', resizeBg);
-
-// ══════════════════════════════════════════
-//  ESTADO DO ORBE
-// ══════════════════════════════════════════
-function setOrb(state) {
-  orbState = state;
-  const lbl  = document.getElementById('orb-label');
-  const mic  = document.getElementById('vmic');
-  const mlbl = document.getElementById('mic-label');
-
-  const cfg = {
-    idle:      { label:'AGUARDANDO COMANDO',   lc:'idle',      micBorder:'#ef4444', micColor:'#ef4444', micText:'TOQUE PARA FALAR',   micOn:false },
-    listening: { label:'OUVINDO...',           lc:'listening', micBorder:'#f87171', micColor:'#fca5a5', micText:'OUVINDO — TOQUE PARA PARAR', micOn:true  },
-    thinking:  { label:'ANALISANDO SITUAÇÃO',  lc:'thinking',  micBorder:'#a78bfa', micColor:'#a78bfa', micText:'PROCESSANDO...',      micOn:false },
-    speaking:  { label:'GUARDIAN FALANDO...',  lc:'speaking',  micBorder:'#4ade80', micColor:'#4ade80', micText:'TOQUE PARA PARAR',   micOn:false }
-  };
-  const c = cfg[state] || cfg.idle;
-  lbl.textContent = c.label;
-  lbl.className   = 'orb-label ' + c.lc;
-  mic.style.borderColor = c.micBorder;
-  mic.style.color       = c.micColor;
-  mlbl.textContent = c.micText;
-  mlbl.className   = 'btn-mic-label' + (c.micOn ? ' on' : '');
-  c.micOn ? mic.classList.add('on') : mic.classList.remove('on');
-}
-
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  NAVEGAÇÃO
-// ══════════════════════════════════════════
-function goTab(id, btn) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.getElementById('tab-' + id).classList.add('active');
+// ═══════════════════════════════════════════════════
+function goTab(id,btn){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('on');
 }
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
 //  CHAT
-// ══════════════════════════════════════════
-function addMsg(who, txt) {
-  const c = document.getElementById('vchat');
-  const d = document.createElement('div');
-  d.className = 'msg ' + (who === 'g' ? 'msg-g' : 'msg-u');
-  d.textContent = txt;
-  c.appendChild(d);
-  c.scrollTop = c.scrollHeight;
+// ═══════════════════════════════════════════════════
+function addMsg(who,txt){
+  const c=document.getElementById('vchat');
+  const d=document.createElement('div');
+  d.className='msg '+(who==='g'?'msg-g':'msg-u');
+  d.textContent=txt; c.appendChild(d); c.scrollTop=c.scrollHeight;
 }
 
-// ══════════════════════════════════════════
-//  RESPOSTAS INTELIGENTES OFFLINE
-// ══════════════════════════════════════════
-let step = 0;
-let coletado = {};
-let vplan = null;
+// ═══════════════════════════════════════════════════
+//  VOZ — RECONHECIMENTO CONTÍNUO (modo Jarvis)
+// ═══════════════════════════════════════════════════
+let rec=null, listening=false, speaking=false;
+let silenceTimer=null, finalText='', collecting=false;
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const perguntas = [
-  "Entendido. Qual é o motivo do atraso — desemprego, doença, redução de renda ou outro motivo?",
-  "Compreendido. Há quantos dias ou meses está em atraso?",
-  "Certo. Já recebeu alguma notificação do banco — carta, correspondência ou aviso de leilão?",
-  "Quase pronto. Qual é o tipo do seu contrato — MCMV Faixa 1, 2 ou 3, ou financiamento comum?"
+function initRec(){
+  if(!('SpeechRecognition' in window||'webkitSpeechRecognition' in window))return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR();
+  rec.lang='pt-BR';
+  rec.continuous=true;        // ← fica ouvindo enquanto a pessoa fala
+  rec.interimResults=true;
+
+  rec.onresult=e=>{
+    clearTimeout(silenceTimer);
+    let interim='', fin='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) fin+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    finalText+=fin;
+    document.getElementById('vtranscript').textContent=(finalText+interim).trim();
+    document.getElementById('vtranscript').classList.add('active');
+    // Silêncio de 2.5s → entende que terminou
+    silenceTimer=setTimeout(()=>{
+      if(finalText.trim().length>2){
+        stopListen();
+        processVoz(finalText.trim());
+        finalText='';
+      }
+    },2500);
+  };
+
+  rec.onerror=e=>{
+    if(e.error==='no-speech') return;
+    stopListen();
+    addMsg('g','Não consegui ouvir. Verifique o microfone e tente novamente.');
+  };
+  rec.onend=()=>{ if(listening){ try{rec.start();}catch(e){} } }; // reinicia se ainda escutando
+}
+
+function toggleMic(){
+  if(speaking){ window.speechSynthesis.cancel(); speaking=false; setOrb('idle'); return; }
+  listening?stopListen():startListen();
+}
+
+function startListen(){
+  if(!rec){ addMsg('g','Reconhecimento de voz indisponível. Use Chrome ou Edge.'); return; }
+  listening=true; finalText='';
+  document.getElementById('vtranscript').textContent='';
+  document.getElementById('vtranscript').classList.add('active');
+  setOrb('listening');
+  try{ rec.start(); }catch(e){ stopListen(); }
+}
+
+function stopListen(){
+  listening=false; clearTimeout(silenceTimer);
+  document.getElementById('vtranscript').classList.remove('active');
+  setOrb('idle');
+  try{ rec.stop(); }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════
+//  LÓGICA DE CONVERSA — Agente Perito MCMV
+// ═══════════════════════════════════════════════════
+let etapa=0, coletado={}, vplan=null;
+
+// Apresentação inicial — chamada no load
+const APRESENTACAO = `Boa tarde. Sou o Guardian, perito jurídico especializado no programa Minha Casa Minha Vida. Estou aqui para analisar seu caso com atenção e oferecer as melhores orientações possíveis. Por favor, fique à vontade para me contar tudo sobre sua situação — pode falar o quanto precisar. Qual é o problema que está enfrentando com o seu financiamento?`;
+
+const PERGUNTAS_APROFUNDAMENTO = [
+  (d)=>`Entendo a sua situação com ${d.motivo||'esse motivo'}. Para que eu possa analisar com mais precisão: há quanto tempo está com as parcelas em atraso, e qual é o valor aproximado dessas parcelas?`,
+  (d)=>`Compreendido. Agora preciso saber: o banco já enviou alguma notificação formal — carta registrada, e-mail oficial ou aviso de leilão? E o imóvel é seu único bem de moradia?`,
+  (d)=>`Quase concluindo a análise. Qual é a faixa do seu contrato MCMV — Faixa 1, 2 ou 3? E você já tentou negociar diretamente com a agência bancária?`,
+  (d)=>`Perfeito. Com base em tudo que me relatou — ${d.motivo||'sua situação'}, atraso de ${d.atraso||'período informado'}, fase ${d.fase||'identificada'} — tenho informações suficientes para elaborar seu plano de ação jurídico. Permita-me analisar os fundamentos legais aplicáveis ao seu caso.`
 ];
 
-const respostasFinal = (d) => `Análise concluída. Com base no seu caso — ${d.motivo || 'situação informada'}, ${d.atraso || 'atraso'}, fase: ${d.fase || 'identificada'} — identifiquei os seguintes caminhos de defesa. Vou gerar seu plano de ação agora.`;
+function processarResposta(txt){
+  const t=txt.toLowerCase();
+  let resposta='';
 
-function processarOffline(txt) {
-  txt = txt.toLowerCase();
-  let resposta = '';
+  if(etapa===0){
+    // Coleta situação geral
+    if(t.match(/desempreg|demit|perdi.*empreg|fui.*mandad|trabalh|renda/)) coletado.motivo='perda de renda por desemprego';
+    else if(t.match(/doen|saúde|médic|hospital|cirurgia|acidente|incapac/)) coletado.motivo='doença ou incapacidade laboral';
+    else if(t.match(/reduz|diminui|salário.*baixou|renda.*diminui|corte/)) coletado.motivo='redução significativa de renda';
+    else if(t.match(/separei|divórc|cônjuge|esposa|marido/)) coletado.motivo='separação conjugal';
+    else if(t.match(/faleceu|morte|falecimento|viúv/)) coletado.motivo='falecimento do titular';
+    else if(t.match(/pandemia|covid/)) coletado.motivo='impacto econômico da pandemia';
+    else coletado.motivo=txt.substring(0,80);
+    resposta=PERGUNTAS_APROFUNDAMENTO[0](coletado);
+    etapa=1;
 
-  if (step === 0) {
-    if (txt.includes('desempreg') || txt.includes('perdi') || txt.includes('demit')) {
-      coletado.motivo = 'desemprego';
-      resposta = "Desemprego é uma das situações mais protegidas. A Teoria da Imprevisão do Código Civil permite revisão contratual por evento inesperado. " + perguntas[1];
-    } else if (txt.includes('doen') || txt.includes('saúde') || txt.includes('médic') || txt.includes('hospital')) {
-      coletado.motivo = 'doença';
-      resposta = "Doença ou incapacidade laboral é fundamento sólido para revisão contratual. Vamos verificar os prazos. " + perguntas[1];
-    } else if (txt.includes('renda') || txt.includes('reduz') || txt.includes('diminui') || txt.includes('salário')) {
-      coletado.motivo = 'redução de renda';
-      resposta = "Redução de renda pode ensejar pedido de reenquadramento de faixa no MCMV. " + perguntas[1];
-    } else {
-      coletado.motivo = txt;
-      resposta = "Registrado. " + perguntas[1];
+  } else if(etapa===1){
+    const nums=txt.match(/\d+/g);
+    if(nums) coletado.atraso=nums[0]+(txt.includes('mes')||txt.includes('mês')?` meses`:`  dias`);
+    else coletado.atraso='período informado';
+    if(t.match(/valor|parcela|reais|rs|r\$/)&&nums&&nums.length>1) coletado.valorParcela='R$ '+nums[1];
+    if(parseInt(nums&&nums[0]||0)>90||t.match(/mais de.*m[eê]s|v[aá]rios|muito tempo/)){
+      coletado.urgencia='alta';
     }
-    step = 1;
-  } else if (step === 1) {
-    const nums = txt.match(/\d+/);
-    coletado.atraso = nums ? nums[0] + ' dias' : txt;
-    if (nums && parseInt(nums[0]) > 90) {
-      resposta = "Atraso superior a 90 dias requer atenção urgente — o banco pode iniciar o processo extrajudicial. " + perguntas[2];
+    resposta=PERGUNTAS_APROFUNDAMENTO[1](coletado);
+    etapa=2;
+
+  } else if(etapa===2){
+    if(t.match(/sim|recebi|chegou|carta|notific|leilão|consolidaç/)) {
+      coletado.fase='notificação recebida';
+      coletado.urgencia='crítica';
+    } else if(t.match(/leilão.*marc|data.*leilão/)) {
+      coletado.fase='leilão marcado';
+      coletado.urgencia='crítica';
     } else {
-      resposta = "Prazo dentro do período possível de negociação direta. " + perguntas[2];
+      coletado.fase='preventiva — sem notificação ainda';
     }
-    step = 2;
-  } else if (step === 2) {
-    if (txt.includes('sim') || txt.includes('recebi') || txt.includes('carta') || txt.includes('leilão') || txt.includes('notific')) {
-      coletado.fase = 'notificação recebida';
-      resposta = "Atenção: notificação recebida significa que o prazo de 15 dias pode estar correndo. Vamos verificar o tipo de contrato. " + perguntas[3];
-    } else {
-      coletado.fase = 'preventiva';
-      resposta = "Situação preventiva — ainda há tempo para agir sem urgência extrema. " + perguntas[3];
-    }
-    step = 3;
-  } else if (step === 3) {
-    if (txt.includes('faixa 1') || txt.includes('faixa1') || txt.includes('subsidiado') || txt.includes('baixa renda')) {
-      coletado.tipo = 'MCMV Faixa 1';
-      resposta = "MCMV Faixa 1 tem as maiores proteções legais disponíveis. " + respostasFinal(coletado);
-    } else if (txt.includes('faixa 2') || txt.includes('faixa 3') || txt.includes('financiado')) {
-      coletado.tipo = 'MCMV Faixa 2/3';
-      resposta = "Contrato MCMV financiado. Proteções da Lei 14.620/2023 aplicáveis. " + respostasFinal(coletado);
-    } else {
-      coletado.tipo = txt;
-      resposta = respostasFinal(coletado);
-    }
+    coletado.unicoBem=t.match(/único|só esse|moro aqui|minha casa/)?'sim':'não informado';
+    resposta=PERGUNTAS_APROFUNDAMENTO[2](coletado);
+    etapa=3;
+
+  } else if(etapa===3){
+    if(t.match(/faixa 1|subsidiado|social|0 de juros|sem juros/)) coletado.tipo='MCMV Faixa 1';
+    else if(t.match(/faixa 2/)) coletado.tipo='MCMV Faixa 2';
+    else if(t.match(/faixa 3/)) coletado.tipo='MCMV Faixa 3';
+    else coletado.tipo='MCMV (faixa a verificar)';
+    coletado.tentouNegociar=t.match(/tentei|fui|liguei|fui ao banco|tentativa/)?'sim':'não';
+    resposta=PERGUNTAS_APROFUNDAMENTO[3](coletado);
+    etapa=4;
+
+  } else if(etapa===4){
+    // Gera plano e libera pagamento
     gerarPlanoOffline();
-    step = 4;
+    resposta=`Análise concluída. Identifiquei os fundamentos jurídicos aplicáveis ao seu caso com base na Lei 9.514 de 97, na Lei 14.620 de 2023 e no Código de Defesa do Consumidor. Elaborei um plano de ação com as medidas recomendadas por ordem de urgência. Para receber o documento completo em PDF, toque no botão azul abaixo.`;
+    etapa=5;
+    setTimeout(()=>document.getElementById('area-btn-pagar').style.display='block',1200);
   } else {
-    resposta = "Plano de ação gerado. Use o botão verde acima para baixar o PDF com todas as orientações jurídicas. Deseja esclarecer alguma dúvida específica?";
+    resposta='Estou à disposição para quaisquer outras dúvidas sobre o seu caso. Toque no botão para obter o plano de ação completo.';
   }
   return resposta;
 }
 
-function gerarPlanoOffline() {
-  vplan = {
-    titulo: "Meu Plano de Ação MCMV",
-    situacao: {
-      tipo: coletado.tipo || 'MCMV',
-      atraso: coletado.atraso || 'informado',
-      motivo: coletado.motivo || 'informado',
-      fase: coletado.fase || 'identificada'
-    },
-    acoes_imediatas: [
-      { prazo: "Esta semana", acao: coletado.fase === 'notificação recebida' ? "URGENTE: Procure a Defensoria Pública ou advogado imediatamente. O prazo de 15 dias para purgação da mora pode estar correndo." : "Vá pessoalmente à agência da Caixa ou banco e solicite renegociação formal. Peça protocolo por escrito.", lei: "Lei 9.514/97 Art. 26" },
-      { prazo: "Nos próximos 7 dias", acao: "Reúna documentos: contrato, comprovante de renda atual, comprovante do motivo do atraso (carta de demissão, atestado médico, etc.) e todas as notificações recebidas.", lei: "CDC Art. 51 / CC Art. 478" },
-      { prazo: "Imediato se houver leilão", acao: "Ingresse com tutela de urgência para suspender o leilão. Leve o processo à Defensoria Pública ou Juizado Especial mais próximo.", lei: "CPC Art. 300" }
-    ],
-    acoes_medio_prazo: [
-      { prazo: "30 dias", acao: "Se o banco negar a renegociação, protocole Ação Revisional de Contrato questionando cláusulas abusivas (multa >2%, capitalização de juros).", lei: "CDC Art. 51 / Lei 9.298/96" },
-      { prazo: "30-60 dias", acao: coletado.tipo === 'MCMV Faixa 1' ? "Solicite reenquadramento de faixa junto à Caixa Econômica Federal com base na Lei 14.620/2023, apresentando comprovante de renda atual." : "Solicite alongamento de prazo ou redução temporária de parcelas, documentando a situação de dificuldade financeira.", lei: "Lei 14.620/2023" },
-      { prazo: "60-90 dias", acao: "Se o banco se recusar a receber pagamentos, ingresse com Consignação em Pagamento judicial para depositar os valores e provar boa-fé.", lei: "CPC Art. 539 / CC Art. 334" }
-    ],
-    direitos: [
-      "Direito à notificação pessoal antes de qualquer leilão (Lei 9.514/97 Art. 26)",
-      "Direito à revisão de cláusulas abusivas — multa limitada a 2% (Lei 9.298/96)",
-      "Direito à renegociação antes da execução, especialmente no MCMV Faixa 1",
-      "Direito à assistência jurídica gratuita pela Defensoria Pública (CF/88 Art. 134)",
-      "Direito à função social da propriedade e à moradia (CF/88 Arts. 5º e 6º)"
-    ],
-    alertas: [
-      "NUNCA abandone o imóvel — isso pode prejudicar sua defesa judicial",
-      "Guarde TODOS os documentos: contrato, boletos, notificações, cartas do banco",
-      "Se receber aviso de leilão: prazo é curtíssimo — aja imediatamente",
-      "Este documento é informativo. Consulte a Defensoria Pública ou advogado antes de protocolar qualquer ação",
-      "Defensoria Pública é GRATUITA — não pague honorários antecipados a desconhecidos"
-    ]
-  };
-  document.getElementById('vbtn-pdf').disabled = false;
-}
-
-// ══════════════════════════════════════════
-//  VOZ
-// ══════════════════════════════════════════
-let rec = null, listening = false, speaking = false;
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-function initRec() {
-  if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) return;
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  rec = new SR();
-  rec.lang = 'pt-BR'; rec.continuous = false; rec.interimResults = true;
-  rec.onresult = e => {
-    let fin = '', inter = '';
-    for (let i = e.resultIndex; i < e.results.length; i++) {
-      if (e.results[i].isFinal) fin += e.results[i][0].transcript;
-      else inter += e.results[i][0].transcript;
-    }
-    document.getElementById('vtranscript').textContent = fin || inter;
-    if (fin) { stopListen(); processVoz(fin.trim()); }
-  };
-  rec.onerror = e => { stopListen(); if (e.error !== 'no-speech') addMsg('g', 'Não consegui ouvir. Verifique as permissões do microfone.'); };
-  rec.onend   = () => { if (listening) stopListen(); };
-}
-
-function toggleMic() {
-  if (speaking) { window.speechSynthesis.cancel(); speaking = false; setOrb('idle'); return; }
-  listening ? stopListen() : startListen();
-}
-
-function startListen() {
-  if (!rec) { addMsg('g', 'Reconhecimento de voz não disponível. Use Chrome ou Edge.'); return; }
-  listening = true;
-  document.getElementById('vtranscript').textContent = '';
-  setOrb('listening');
-  try { rec.start(); } catch(e) { stopListen(); }
-}
-
-function stopListen() {
-  listening = false;
-  setOrb('idle');
-  try { rec.stop(); } catch(e) {}
-}
-
-function processVoz(txt) {
-  if (!txt) return;
-  addMsg('u', txt);
+function processVoz(txt){
+  if(!txt)return;
+  addMsg('u',txt);
   setOrb('thinking');
-  setTimeout(() => {
-    const resposta = processarOffline(txt);
-    addMsg('g', resposta);
-    falar(resposta);
-  }, 800);
+  setTimeout(()=>{
+    const resp=processarResposta(txt);
+    addMsg('g',resp);
+    falar(resp);
+  },700);
 }
 
-function falar(txt) {
-  if (!('speechSynthesis' in window)) { setOrb('idle'); return; }
+// ═══════════════════════════════════════════════════
+//  SÍNTESE DE VOZ — Tom masculino de advogado
+// ═══════════════════════════════════════════════════
+function getVozMasculina(){
+  const vozes=window.speechSynthesis.getVoices();
+  // Prioridades: voz masculina pt-BR → qualquer pt-BR → fallback
+  const prioridade=[
+    v=>v.lang==='pt-BR'&&v.name.match(/Daniel|Ricardo|Luciano|Paulo|Lucas|Marcos|Antonio|José|Carlos|Google\s+português/i),
+    v=>v.lang==='pt-BR',
+    v=>v.lang.startsWith('pt'),
+    v=>v.lang.startsWith('es'), // fallback espanhol (mais grave que inglês)
+  ];
+  for(const fn of prioridade){
+    const v=vozes.find(fn);
+    if(v) return v;
+  }
+  return null;
+}
+
+function falar(txt){
+  if(!('speechSynthesis' in window)){ setOrb('idle'); return; }
   window.speechSynthesis.cancel();
-  const frases = txt.match(/[^.!?]+[.!?]*/g) || [txt];
-  let i = 0;
-  setOrb('speaking'); speaking = true;
-  function next() {
-    if (i >= frases.length) { speaking = false; setOrb('idle'); return; }
-    const u = new SpeechSynthesisUtterance(frases[i].trim());
-    u.lang = 'pt-BR'; u.rate = 0.92; u.pitch = 0.95;
-    const vs = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt'));
-    if (vs.length) u.voice = vs[0];
-    u.onend = () => { i++; next(); }; u.onerror = () => { i++; next(); };
+  // Divide em frases para fluidez natural
+  const frases=txt.match(/[^.!?;]+[.!?;]*/g)||[txt];
+  let i=0; setOrb('speaking'); speaking=true;
+
+  function next(){
+    if(i>=frases.length){ speaking=false; setOrb('idle'); return; }
+    const frase=frases[i].trim();
+    if(!frase){ i++; next(); return; }
+    const u=new SpeechSynthesisUtterance(frase);
+    u.lang='pt-BR';
+    u.rate=0.88;    // mais lento — advogado pesa as palavras
+    u.pitch=0.90;   // ligeiramente mais grave
+    u.volume=1.0;
+    const voz=getVozMasculina();
+    if(voz) u.voice=voz;
+    u.onend=()=>{ i++; next(); };
+    u.onerror=()=>{ i++; next(); };
     window.speechSynthesis.speak(u);
   }
   next();
 }
 
-function resetVoz() {
-  step = 0; coletado = {}; vplan = null; listening = false; speaking = false;
-  window.speechSynthesis && window.speechSynthesis.cancel();
-  stopListen();
-  document.getElementById('vbtn-pdf').disabled = true;
-  document.getElementById('vchat').innerHTML = '';
-  document.getElementById('vtranscript').textContent = '';
-  addMsg('g', 'Sistema reiniciado. Toque na esfera ou no microfone e descreva sua situação no MCMV.');
+function resetVoz(){
+  etapa=0; coletado={}; vplan=null;
+  window.speechSynthesis&&window.speechSynthesis.cancel();
+  stopListen(); speaking=false;
+  document.getElementById('vchat').innerHTML='';
+  document.getElementById('vtranscript').textContent='';
+  document.getElementById('area-btn-pagar').style.display='none';
+  document.getElementById('paywall').style.display='none';
+  document.getElementById('pix-box').style.display='none';
+  document.getElementById('success-box').style.display='none';
+  clearInterval(checkInterval); clearInterval(timerInterval);
+  // Reapresenta
+  setTimeout(()=>{
+    addMsg('g',APRESENTACAO);
+    falar(APRESENTACAO);
+  },400);
 }
 
-// ══════════════════════════════════════════
-//  PDF
-// ══════════════════════════════════════════
-let aplan = null, pdfText = '';
-
-async function loadPDF(inp) {
-  const f = inp.files && inp.files[0]; if (!f) return;
-  if (f.size > 10 * 1024 * 1024) { alert('Arquivo muito grande. Máximo 10MB.'); return; }
-  document.getElementById('uzone').style.display = 'none';
-  document.getElementById('pwrap').style.display = 'block';
-  document.getElementById('pfname').textContent = f.name;
-  const fill = document.getElementById('pfill'), pmsg = document.getElementById('pmsg');
-  fill.style.width = '15%'; pmsg.textContent = 'Lendo o contrato...';
-  try {
-    const buf = await f.arrayBuffer(); fill.style.width = '40%';
-    const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-    let txt = '';
-    for (let p = 1; p <= Math.min(pdf.numPages, 20); p++) {
-      const pg = await pdf.getPage(p), tc = await pg.getTextContent();
-      txt += tc.items.map(i => i.str).join(' ') + '\n';
-      fill.style.width = (40 + Math.round((p / Math.min(pdf.numPages,20)) * 40)) + '%';
-    }
-    pdfText = txt.trim(); fill.style.width = '85%';
-    pmsg.textContent = 'Analisando cláusulas...';
-    await analisarPDFOffline(pdfText, f.name);
-  } catch(e) { pmsg.textContent = 'Erro: ' + e.message; }
-}
-
-async function analisarPDFOffline(txt, nome) {
-  await new Promise(r => setTimeout(r, 1200));
-  const t = txt.toLowerCase();
-  let analise = `// ANÁLISE DO CONTRATO — ${nome}\n\n`;
-
-  analise += `1. O QUE VOCÊ TEM\n`;
-  if (t.includes('faixa 1') || t.includes('subsidiado')) analise += `Contrato MCMV Faixa 1 — máxima proteção legal disponível.\n\n`;
-  else if (t.includes('faixa 2') || t.includes('faixa 3')) analise += `Contrato MCMV Faixa 2/3 — proteções da Lei 14.620/2023 aplicáveis.\n\n`;
-  else analise += `Contrato de financiamento habitacional — verificar enquadramento no MCMV.\n\n`;
-
-  analise += `2. O QUE ENCONTRAMOS\n`;
-  let achouProblema = false;
-  if (t.includes('10%') || t.includes('5%') || t.includes('8%')) { analise += `⚠ Multa moratória possivelmente acima do limite legal de 2% (Lei 9.298/96).\n`; achouProblema = true; }
-  if (t.includes('capitaliz') || t.includes('juros sobre juros')) { analise += `⚠ Indícios de capitalização de juros — verificar legalidade (CDC Art. 51).\n`; achouProblema = true; }
-  if (t.includes('alienação fiduciária') || t.includes('alienacao fiduciaria')) analise += `✓ Contrato sob regime de alienação fiduciária — Lei 9.514/97 aplicável.\n`;
-  if (!achouProblema) analise += `Análise de texto básica realizada. Para análise completa de cláusulas, conecte a chave de API.\n`;
-
-  analise += `\n3. SEU NÍVEL DE RISCO\n`;
-  analise += achouProblema ? `MÉDIO-ALTO — há cláusulas que merecem revisão judicial.\n` : `A VERIFICAR — leve o contrato à Defensoria Pública para análise presencial.\n`;
-
-  analise += `\n4. O QUE VOCÊ PODE FAZER\n`;
-  analise += `• Ação Revisional — questionar cláusulas abusivas identificadas\n`;
-  analise += `• Tutela de Urgência — se houver leilão marcado\n`;
-  analise += `• Defensoria Pública — análise completa e gratuita do contrato\n`;
-
-  analise += `\n5. PRÓXIMOS PASSOS\n`;
-  analise += `Esta semana: Leve este contrato à Defensoria Pública mais próxima.\n`;
-  analise += `30 dias: Se houver notificação, ingresse com medida judicial imediatamente.\n`;
-  analise += `90 dias: Acompanhe o prazo de purgação da mora (15 dias após notificação).`;
-
-  aplan = {
-    titulo: "Análise do Contrato MCMV",
-    situacao: { tipo: 'Contrato MCMV', risco: achouProblema ? 'Médio-Alto' : 'A Verificar', irregularidades: achouProblema ? ['Multa possivelmente abusiva', 'Verificar capitalização'] : ['Análise manual recomendada'] },
-    acoes_imediatas: [
-      { prazo: "Esta semana", acao: "Leve o contrato à Defensoria Pública para análise completa e gratuita.", lei: "CF/88 Art. 134" },
-      { prazo: "Imediato (se leilão)", acao: "Tutela de urgência para suspender qualquer execução em andamento.", lei: "CPC Art. 300" }
+// ═══════════════════════════════════════════════════
+//  PLANO OFFLINE
+// ═══════════════════════════════════════════════════
+function gerarPlanoOffline(){
+  const urgente=coletado.urgencia==='crítica'||coletado.urgencia==='alta';
+  vplan={
+    titulo:'Plano de Ação Jurídico — MCMV',
+    situacao:{
+      tipo:coletado.tipo||'MCMV',
+      atraso:coletado.atraso||'informado',
+      motivo:coletado.motivo||'informado',
+      fase:coletado.fase||'identificada',
+      urgencia:coletado.urgencia||'a verificar'
+    },
+    acoes_imediatas:[
+      urgente
+        ?{prazo:'URGENTE — Hoje',acao:'Procure a Defensoria Pública ou advogado especializado imediatamente. O prazo para purgar a mora ou questionar o processo pode estar correndo.',lei:'Lei 9.514/97 Art. 26 · CPC Art. 300'}
+        :{prazo:'Esta semana',acao:'Compareça pessoalmente à agência bancária e solicite renegociação formal por escrito. Exija protocolo de atendimento.',lei:'Lei 14.620/2023 · Lei 9.514/97'},
+      {prazo:'Nos próximos 7 dias',acao:'Reúna documentos essenciais: contrato original, comprovantes de renda atual, prova do motivo do atraso (carta de demissão, atestado médico ou similares) e todas as notificações recebidas do banco.',lei:'Documentação para defesa jurídica'},
+      urgente
+        ?{prazo:'Imediato se houver leilão',acao:'Ingresse com Tutela de Urgência para suspender o leilão. A Defensoria Pública pode protocolar em horas. Não aguarde.',lei:'CPC Art. 300 — Tutela de Urgência'}
+        :{prazo:'15 dias',acao:'Se o banco negar a renegociação, ingresse com pedido formal de reenquadramento de faixa MCMV com base na sua renda atual comprovada.',lei:'Lei 14.620/2023'}
     ],
-    acoes_medio_prazo: [
-      { prazo: "30 dias", acao: "Protocole Ação Revisional questionando as cláusulas identificadas como possivelmente abusivas.", lei: "CDC Art. 51 / Lei 9.298/96" },
-      { prazo: "60 dias", acao: "Solicite renegociação formal com base na Lei 14.620/2023 se contrato for MCMV.", lei: "Lei 14.620/2023" }
+    acoes_medio_prazo:[
+      {prazo:'30 dias',acao:'Protocole Ação Revisional de Contrato questionando cláusulas abusivas: multa acima de 2%, capitalização de juros e encargos não previstos.',lei:'CDC Art. 51 · Lei 9.298/96 · CC Art. 478'},
+      {prazo:'30–60 dias',acao:coletado.tipo==='MCMV Faixa 1'?'Solicite reenquadramento de faixa à Caixa Econômica Federal apresentando comprovante de renda atualizado. Lei 14.620/2023 garante esse direito.':'Negocie alongamento do prazo ou redução temporária de parcelas, documentando formalmente a situação de dificuldade financeira.',lei:'Lei 14.620/2023'},
+      {prazo:'60–90 dias',acao:'Se o banco se recusar a receber pagamentos, ingresse com Consignação em Pagamento judicial. Isso prova boa-fé e suspende a execução.',lei:'CPC Art. 539 · CC Art. 334'}
     ],
-    direitos: [
-      "Revisão judicial de cláusulas abusivas (CDC Art. 51)",
-      "Multa moratória limitada a 2% (Lei 9.298/96)",
-      "Notificação pessoal obrigatória antes do leilão (Lei 9.514/97)",
-      "Assistência jurídica gratuita pela Defensoria Pública"
+    direitos:[
+      'Notificação pessoal obrigatória antes de qualquer leilão (Lei 9.514/97 Art. 26)',
+      'Prazo de 15 dias para purgar a mora após notificação formal',
+      'Multa moratória limitada a 2% do valor da parcela (Lei 9.298/96)',
+      'Revisão judicial de cláusulas abusivas — CDC Art. 51',
+      coletado.tipo==='MCMV Faixa 1'?'Parcela limitada a 10–15% da renda familiar (Lei 14.620/2023)':'Direito à renegociação antes da execução (Lei 14.620/2023)',
+      'Assistência jurídica gratuita pela Defensoria Pública (CF/88 Art. 134)',
+      'Função social da propriedade — proteção constitucional da moradia (CF/88 Arts. 5º e 6º)'
     ],
-    alertas: [
-      "Esta é uma análise automática básica — consulte a Defensoria Pública para análise completa",
-      "Guarde o contrato original e todas as notificações recebidas",
-      "Não abandone o imóvel durante qualquer processo judicial"
+    alertas:[
+      'NUNCA abandone o imóvel — isso pode prejudicar gravemente sua defesa judicial',
+      'Guarde TODOS os documentos: contrato, boletos, notificações, cartas, e-mails do banco',
+      coletado.urgencia==='crítica'?'URGENTE: Leilão iminente — procure a Defensoria Pública hoje mesmo':'Se receber aviso de leilão: aja imediatamente — o prazo é curtíssimo',
+      'Este documento é orientativo. Consulte a Defensoria Pública ou advogado antes de protocolar qualquer ação',
+      'Defensoria Pública é TOTALMENTE GRATUITA — não pague antecipado a desconhecidos'
     ]
   };
-
-  document.getElementById('pfill').style.width = '100%';
-  document.getElementById('pmsg').textContent = 'Análise concluída!';
-  document.getElementById('ptext').textContent = analise;
-  document.getElementById('presult').style.display = 'block';
 }
 
-function resetContrato() {
-  document.getElementById('uzone').style.display = 'block';
-  document.getElementById('pwrap').style.display = 'none';
-  document.getElementById('presult').style.display = 'none';
-  document.getElementById('pfile').value = '';
-  document.getElementById('pfill').style.width = '0%';
-  aplan = null; pdfText = '';
+// ═══════════════════════════════════════════════════
+//  ASAAS — COBRANÇA PIX
+// ═══════════════════════════════════════════════════
+let planoSelecionado='voz', valorSelecionado=CONFIG.PRECO_VOZ, descricaoSelecionada='Plano de Ação por Voz';
+let cobrancaId='', pixCopiaECola='', checkInterval, timerInterval, timerSeg=CONFIG.PIX_EXPIRA;
+
+function selecionarPlano(tipo,valor,desc){
+  planoSelecionado=tipo; valorSelecionado=valor; descricaoSelecionada=desc;
+  document.querySelectorAll('.pw-plan').forEach(p=>p.classList.remove('selected'));
+  document.getElementById('plan-'+tipo).classList.add('selected');
 }
 
-function buildPDF(plan, titulo) {
-  if (!plan) return null;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-  const hoje = new Date().toLocaleDateString('pt-BR');
-  doc.setFillColor(3, 7, 18); doc.rect(0, 0, 210, 44, 'F');
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(56, 189, 248);
-  doc.text('GUARDIAN IA — PLANO DE AÇÃO', 105, 16, { align: 'center' });
-  doc.setFontSize(9); doc.setTextColor(100, 160, 200);
-  doc.text((titulo || plan.titulo || '').toUpperCase(), 105, 25, { align: 'center' });
-  doc.setFontSize(7.5); doc.setTextColor(71, 85, 105);
-  doc.text('Gerado em ' + hoje + ' · Sem dados pessoais · Guardian IA', 105, 33, { align: 'center' });
-  let y = 52;
-  const sit = plan.situacao || {};
-  const sitTxt = Object.entries(sit).map(([k,v]) => Array.isArray(v) ? k+': '+v.join(', ') : k+': '+v).join('  ·  ');
-  if (sitTxt) {
-    doc.setFillColor(230, 241, 251); doc.roundedRect(12, y, 186, 12, 2, 2, 'F');
-    doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(30, 60, 100);
-    doc.text(doc.splitTextToSize(sitTxt, 178)[0] || '', 16, y + 8); y += 20;
+function abrirPaywall(){
+  selecionarPlano('voz',CONFIG.PRECO_VOZ,'Plano de Ação por Voz');
+  document.getElementById('paywall').style.display='block';
+  document.getElementById('area-btn-pagar').style.display='none';
+  document.getElementById('plan-voz').classList.add('selected');
+}
+
+function abrirPaywallContrato(){
+  selecionarPlano('contrato',CONFIG.PRECO_CONTRATO,'Análise de Contrato MCMV');
+  document.getElementById('paywall').style.display='block';
+  document.getElementById('plan-contrato').classList.add('selected');
+}
+
+function fecharPaywall(){
+  document.getElementById('paywall').style.display='none';
+  document.getElementById('area-btn-pagar').style.display='block';
+}
+
+async function gerarCobrancaAsaas(){
+  const nome=document.getElementById('inp-nome').value.trim();
+  const email=document.getElementById('inp-email').value.trim();
+  if(!nome||!email){ alert('Preencha seu nome e e-mail para continuar.'); return; }
+  if(!email.includes('@')){ alert('Digite um e-mail válido.'); return; }
+
+  const btnGerar=document.querySelector('.paywall .btn-blue');
+  btnGerar.textContent='Gerando PIX...'; btnGerar.disabled=true;
+
+  try{
+    // 1. Criar ou buscar cliente
+    const clienteRes=await fetch(`${ASAAS_URL}/customers`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','access_token':CONFIG.ASAAS_KEY},
+      body:JSON.stringify({name:nome,email,notificationDisabled:false})
+    });
+    const cliente=await clienteRes.json();
+    if(!cliente.id) throw new Error('Erro ao criar cliente: '+JSON.stringify(cliente));
+
+    // 2. Criar cobrança PIX
+    const venc=new Date(); venc.setDate(venc.getDate()+1);
+    const dataVenc=venc.toISOString().split('T')[0];
+    const cobrRes=await fetch(`${ASAAS_URL}/payments`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','access_token':CONFIG.ASAAS_KEY},
+      body:JSON.stringify({
+        customer:cliente.id,
+        billingType:'PIX',
+        value:valorSelecionado,
+        dueDate:dataVenc,
+        description:descricaoSelecionada+' — Guardian IA',
+        externalReference:'guardian_'+Date.now()
+      })
+    });
+    const cobr=await cobrRes.json();
+    if(!cobr.id) throw new Error('Erro ao criar cobrança: '+JSON.stringify(cobr));
+    cobrancaId=cobr.id;
+
+    // 3. Buscar QR Code PIX
+    const pixRes=await fetch(`${ASAAS_URL}/payments/${cobr.id}/pixQrCode`,{
+      headers:{'access_token':CONFIG.ASAAS_KEY}
+    });
+    const pix=await pixRes.json();
+    pixCopiaECola=pix.payload||pix.encodedImage||'';
+
+    // Exibir tela PIX
+    document.getElementById('paywall').style.display='none';
+    document.getElementById('pix-box').style.display='block';
+    document.getElementById('pix-valor').textContent='R$ '+valorSelecionado.toFixed(2).replace('.',',');
+
+    // Desenhar QR Code simples (usando API pública)
+    const qrImg=new Image();
+    qrImg.crossOrigin='anonymous';
+    qrImg.src=`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(pixCopiaECola)}`;
+    qrImg.onload=()=>{ const c=document.getElementById('qr-canvas'); const cx=c.getContext('2d'); cx.drawImage(qrImg,0,0,160,160); };
+
+    // Timer regressivo
+    timerSeg=CONFIG.PIX_EXPIRA;
+    timerInterval=setInterval(()=>{
+      timerSeg--;
+      const m=Math.floor(timerSeg/60).toString().padStart(2,'0');
+      const s=(timerSeg%60).toString().padStart(2,'0');
+      document.getElementById('pix-timer').textContent=`${m}:${s}`;
+      if(timerSeg<=0){ clearInterval(timerInterval); clearInterval(checkInterval); }
+    },1000);
+
+    // Verificação automática
+    checkInterval=setInterval(()=>verificarPagamento(cobr.id),CONFIG.CHECK_INTERVAL);
+
+  }catch(err){
+    console.error(err);
+    alert('Erro ao gerar PIX: '+err.message+'\n\nVerifique se a chave Asaas está configurada corretamente.');
+    btnGerar.textContent='Gerar PIX'; btnGerar.disabled=false;
   }
-  function sec(t, rgb) {
-    if (y > 262) { doc.addPage(); y = 16; }
-    doc.setFillColor(...rgb); doc.rect(12, y, 186, 9, 'F');
-    doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(255, 255, 255);
-    doc.text(t, 16, y + 6.2); y += 13;
+}
+
+async function verificarPagamento(id){
+  try{
+    const res=await fetch(`${ASAAS_URL}/payments/${id}`,{
+      headers:{'access_token':CONFIG.ASAAS_KEY}
+    });
+    const pay=await res.json();
+    if(pay.status==='RECEIVED'||pay.status==='CONFIRMED'){
+      clearInterval(checkInterval); clearInterval(timerInterval);
+      pagamentoConfirmado();
+    }
+  }catch(e){ console.warn('Verificação falhou:',e); }
+}
+
+function pagamentoConfirmado(){
+  document.getElementById('pix-dot').className='pix-dot paid';
+  document.getElementById('pix-label').className='pix-label paid';
+  document.getElementById('pix-label').textContent='PAGAMENTO CONFIRMADO!';
+  setTimeout(()=>{
+    document.getElementById('pix-box').style.display='none';
+    document.getElementById('success-box').style.display='block';
+    downloadFinal();
+  },1500);
+}
+
+function copiarPix(){
+  if(!pixCopiaECola){ alert('Código PIX ainda não disponível.'); return; }
+  navigator.clipboard.writeText(pixCopiaECola).then(()=>{
+    const lbl=document.getElementById('pix-copy-label');
+    lbl.textContent='COPIADO!';
+    setTimeout(()=>lbl.textContent='COPIAR CÓDIGO PIX',2500);
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  PDF
+// ═══════════════════════════════════════════════════
+let aplan=null, pdfText='';
+
+function buildPDF(plan,titulo){
+  if(!plan)return null;
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const hoje=new Date().toLocaleDateString('pt-BR');
+  // Cabeçalho
+  doc.setFillColor(3,7,18); doc.rect(0,0,210,44,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(56,189,248);
+  doc.text('GUARDIAN IA — PLANO DE AÇÃO JURÍDICO',105,15,{align:'center'});
+  doc.setFontSize(9); doc.setTextColor(100,160,200);
+  doc.text((titulo||plan.titulo||'').toUpperCase(),105,24,{align:'center'});
+  doc.setFontSize(7); doc.setTextColor(71,85,105);
+  doc.text('Perito Jurídico MCMV · Gerado em '+hoje+' · Sem dados pessoais',105,32,{align:'center'});
+  doc.setDrawColor(56,189,248); doc.setLineWidth(.3); doc.line(15,38,195,38);
+  let y=50;
+  // Situação
+  const sit=plan.situacao||{};
+  const sitTxt=Object.entries(sit).map(([k,v])=>k.replace('_',' ')+': '+v).join('  ·  ');
+  if(sitTxt){
+    doc.setFillColor(230,241,251); doc.roundedRect(12,y,186,13,2,2,'F');
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(30,60,100);
+    const sl=doc.splitTextToSize(sitTxt,178);
+    doc.text(sl[0]||'',16,y+9); y+=21;
   }
-  function items(list) {
-    if (!list || !list.length) return;
-    list.forEach((item, i) => {
-      if (y > 260) { doc.addPage(); y = 16; }
-      doc.setFillColor(i%2===0?248:255, i%2===0?250:255, i%2===0?252:255);
-      doc.rect(14, y, 182, 20, 'F');
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(8); doc.setTextColor(14, 116, 144);
-      doc.text('Prazo: ' + (item.prazo || 'Imediato'), 18, y + 7);
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(20, 20, 20);
-      const ls = doc.splitTextToSize(item.acao || '', 160); doc.text(ls[0] || '', 18, y + 13);
-      if (item.lei) { doc.setFontSize(7.5); doc.setTextColor(100, 100, 100); doc.text('Base: ' + item.lei, 18, y + 18); }
-      y += 24;
+  function sec(t,rgb){
+    if(y>262){doc.addPage();y=16;}
+    doc.setFillColor(...rgb); doc.rect(12,y,186,9,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+    doc.text(t,16,y+6.2); y+=13;
+  }
+  function items(list){
+    if(!list||!list.length)return;
+    list.forEach((item,i)=>{
+      if(y>260){doc.addPage();y=16;}
+      doc.setFillColor(i%2===0?248:255,i%2===0?250:255,i%2===0?252:255);
+      doc.rect(14,y,182,22,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(14,116,144);
+      doc.text('Prazo: '+(item.prazo||'Imediato'),18,y+7);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(20,20,20);
+      const ls=doc.splitTextToSize(item.acao||'',160);
+      doc.text(ls[0]||'',18,y+13);
+      if(ls[1]) doc.text(ls[1],18,y+18);
+      if(item.lei){doc.setFontSize(7);doc.setTextColor(100,100,100);doc.text('Base legal: '+item.lei,18,y+21);}
+      y+=26;
     });
   }
-  sec('O QUE FAZER AGORA', [180, 40, 20]); items(plan.acoes_imediatas); y += 4;
-  if (y > 238) { doc.addPage(); y = 16; }
-  sec('PRÓXIMOS PASSOS', [15, 80, 150]); items(plan.acoes_medio_prazo); y += 4;
-  if (plan.direitos && plan.direitos.length) {
-    if (y > 230) { doc.addPage(); y = 16; }
-    sec('SEUS DIREITOS', [5, 90, 60]);
-    plan.direitos.forEach(d => { if (y > 268) { doc.addPage(); y = 16; } const ls = doc.splitTextToSize('• ' + d, 178); doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(20,20,20); doc.text(ls, 16, y); y += ls.length*5.5+2; }); y += 4;
+  sec('AÇÕES IMEDIATAS',[180,40,20]); items(plan.acoes_imediatas); y+=4;
+  if(y>238){doc.addPage();y=16;}
+  sec('AÇÕES A MÉDIO PRAZO',[15,80,150]); items(plan.acoes_medio_prazo); y+=4;
+  if(plan.direitos&&plan.direitos.length){
+    if(y>228){doc.addPage();y=16;}
+    sec('SEUS DIREITOS',[5,90,60]);
+    plan.direitos.forEach(d=>{
+      if(y>268){doc.addPage();y=16;}
+      const ls=doc.splitTextToSize('• '+d,178);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(20,20,20);
+      doc.text(ls,16,y); y+=ls.length*5.5+2;
+    }); y+=4;
   }
-  if (plan.alertas && plan.alertas.length) {
-    if (y > 230) { doc.addPage(); y = 16; }
-    doc.setFillColor(254,243,199); doc.rect(12,y,186,9,'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(120,70,0);
-    doc.text('ATENÇÃO', 16, y+6.2); y += 13;
-    plan.alertas.forEach(a => { if(y>268){doc.addPage();y=16;} const ls=doc.splitTextToSize('• '+a,178); doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(100,55,0); doc.text(ls,16,y); y+=ls.length*5.5+2; });
+  if(plan.alertas&&plan.alertas.length){
+    if(y>228){doc.addPage();y=16;}
+    doc.setFillColor(254,243,199);doc.rect(12,y,186,9,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(120,70,0);
+    doc.text('ATENÇÃO — LEIA COM CUIDADO',16,y+6.2); y+=13;
+    plan.alertas.forEach(a=>{
+      if(y>268){doc.addPage();y=16;}
+      const ls=doc.splitTextToSize('• '+a,178);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(100,55,0);
+      doc.text(ls,16,y); y+=ls.length*5.5+2;
+    });
   }
-  const np = doc.internal.getNumberOfPages();
-  for (let pg = 1; pg <= np; pg++) { doc.setPage(pg); doc.setFontSize(7); doc.setTextColor(150,150,150); doc.text('Guardian IA · Sem dados pessoais · Página ' + pg + '/' + np, 105, 292, { align: 'center' }); }
+  const np=doc.internal.getNumberOfPages();
+  for(let pg=1;pg<=np;pg++){
+    doc.setPage(pg);doc.setFontSize(7);doc.setTextColor(150,150,150);
+    doc.text('Guardian IA · Perito Jurídico MCMV · Sem dados pessoais · Página '+pg+'/'+np,105,292,{align:'center'});
+  }
   return doc;
 }
 
-function dlVozPDF()     { const d = buildPDF(vplan, 'Atendimento por Voz'); if (d) d.save('guardian_plano.pdf'); }
-function dlAnalisePDF() { const d = buildPDF(aplan || { titulo:'Análise', acoes_imediatas:[{prazo:'Esta semana',acao:'Procure a Defensoria Pública.',lei:'CF/88 Art. 134'}], acoes_medio_prazo:[], direitos:[], alertas:['Consulte um profissional.'] }, 'Análise de Contrato'); if (d) d.save('guardian_analise.pdf'); }
+function downloadFinal(){
+  const plan = planoSelecionado==='contrato'&&aplan ? aplan : vplan;
+  const titulo = planoSelecionado==='contrato' ? 'Análise de Contrato MCMV' : 'Atendimento por Voz';
+  const doc=buildPDF(plan||gerarPlanoFallback(),titulo);
+  if(doc) doc.save('guardian_ia_plano_acao.pdf');
+}
 
-window.speechSynthesis && window.speechSynthesis.getVoices();
-window.speechSynthesis && window.speechSynthesis.addEventListener('voiceschanged', () => {});
+function gerarPlanoFallback(){
+  return {titulo:'Plano de Ação MCMV',situacao:{tipo:'MCMV',fase:'Identificada'},acoes_imediatas:[{prazo:'Esta semana',acao:'Procure a Defensoria Pública com seu contrato e comprovante de renda.',lei:'CF/88 Art. 134'}],acoes_medio_prazo:[],direitos:['Assistência jurídica gratuita pela Defensoria Pública'],alertas:['Consulte um profissional antes de agir.']};
+}
+
+// UPLOAD PDF CONTRATO
+async function loadPDF(inp){
+  const f=inp.files&&inp.files[0]; if(!f)return;
+  if(f.size>10*1024*1024){alert('Máximo 10MB.');return;}
+  document.getElementById('uzone').style.display='none';
+  document.getElementById('pwrap').style.display='block';
+  document.getElementById('pfname').textContent=f.name;
+  const fill=document.getElementById('pfill'),pmsg=document.getElementById('pmsg');
+  fill.style.width='15%'; pmsg.textContent='Lendo contrato...';
+  try{
+    const buf=await f.arrayBuffer(); fill.style.width='40%';
+    const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let txt=''; const total=Math.min(pdf.numPages,20);
+    for(let p=1;p<=total;p++){
+      const pg=await pdf.getPage(p),tc=await pg.getTextContent();
+      txt+=tc.items.map(i=>i.str).join(' ')+'\n';
+      fill.style.width=(40+Math.round((p/total)*35))+'%';
+    }
+    pdfText=txt.trim(); fill.style.width='80%'; pmsg.textContent='Analisando cláusulas...';
+    await analisarPDF(pdfText,f.name);
+  }catch(e){pmsg.textContent='Erro: '+e.message;}
+}
+
+async function analisarPDF(txt,nome){
+  await new Promise(r=>setTimeout(r,1000));
+  const t=txt.toLowerCase();
+  let analise=`// ANÁLISE JURÍDICA — ${nome}\n\n`;
+  analise+=`1. TIPO DE CONTRATO\n`;
+  if(t.includes('faixa 1')||t.includes('subsidiado')) analise+=`Contrato MCMV Faixa 1 — proteção máxima disponível pela Lei 14.620/2023.\n\n`;
+  else if(t.includes('faixa 2')||t.includes('faixa 3')) analise+=`Contrato MCMV Faixa 2/3 — proteções da Lei 14.620/2023 aplicáveis.\n\n`;
+  else analise+=`Financiamento habitacional — verificar enquadramento no MCMV.\n\n`;
+  analise+=`2. CLÁUSULAS IDENTIFICADAS\n`;
+  let achouProblema=false;
+  if(t.match(/10%|8%|5%|multa.*\d+%/)){analise+=`⚠ Multa moratória possivelmente acima do limite legal de 2% (Lei 9.298/96).\n`;achouProblema=true;}
+  if(t.includes('capitaliz')||t.includes('juros sobre juros')){analise+=`⚠ Indícios de capitalização de juros — verificar legalidade (CDC Art. 51).\n`;achouProblema=true;}
+  if(t.includes('alienação fiduciária')||t.includes('alienacao fiduciaria')) analise+=`✓ Regime de alienação fiduciária — Lei 9.514/97 aplicável.\n`;
+  if(!achouProblema) analise+=`Análise básica realizada. Recomenda-se análise presencial na Defensoria Pública para verificação completa.\n`;
+  analise+=`\n3. NÍVEL DE RISCO\n`;
+  analise+=achouProblema?`MÉDIO-ALTO — cláusulas que merecem revisão judicial identificadas.\n`:`A VERIFICAR — análise presencial recomendada.\n`;
+  analise+=`\n4. AÇÕES RECOMENDADAS\n`;
+  analise+=`• Ação Revisional — questionar cláusulas identificadas\n`;
+  analise+=`• Tutela de Urgência — se houver leilão marcado\n`;
+  analise+=`• Defensoria Pública — análise completa e gratuita\n`;
+  analise+=`\n5. PRÓXIMOS PASSOS\n`;
+  analise+=`Esta semana: Leve este contrato à Defensoria Pública mais próxima.\n`;
+  analise+=`30 dias: Se houver notificação, ingresse com medida judicial.\n`;
+  analise+=`90 dias: Monitore prazos de purgação da mora.`;
+  aplan={
+    titulo:'Análise de Contrato MCMV',
+    situacao:{tipo:'Contrato MCMV',risco:achouProblema?'Médio-Alto':'A Verificar'},
+    acoes_imediatas:[
+      {prazo:'Esta semana',acao:'Leve o contrato à Defensoria Pública para análise completa e gratuita.',lei:'CF/88 Art. 134'},
+      ...(achouProblema?[{prazo:'Imediato',acao:'Protocole Ação Revisional questionando as cláusulas abusivas identificadas.',lei:'CDC Art. 51 · Lei 9.298/96'}]:[])
+    ],
+    acoes_medio_prazo:[
+      {prazo:'30 dias',acao:'Solicite renegociação formal com base na Lei 14.620/2023.',lei:'Lei 14.620/2023'},
+      {prazo:'60 dias',acao:'Se banco negar, ingresse com Consignação em Pagamento judicial.',lei:'CPC Art. 539'}
+    ],
+    direitos:['Revisão judicial de cláusulas abusivas (CDC Art. 51)','Multa limitada a 2% (Lei 9.298/96)','Notificação pessoal obrigatória (Lei 9.514/97 Art. 26)','Assistência jurídica gratuita (CF/88 Art. 134)'],
+    alertas:['Análise automática — consulte a Defensoria Pública para análise completa','Guarde o contrato original e todas as notificações']
+  };
+  document.getElementById('pfill').style.width='100%';
+  document.getElementById('pmsg').textContent='Análise concluída!';
+  document.getElementById('ptext').textContent=analise;
+  document.getElementById('presult').style.display='block';
+}
+
+function resetContrato(){
+  document.getElementById('uzone').style.display='block';
+  document.getElementById('pwrap').style.display='none';
+  document.getElementById('presult').style.display='none';
+  document.getElementById('pfile').value='';
+  document.getElementById('pfill').style.width='0%';
+  aplan=null; pdfText='';
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+window.speechSynthesis&&window.speechSynthesis.getVoices();
+window.speechSynthesis&&window.speechSynthesis.addEventListener('voiceschanged',()=>{});
 initRec();
+// Apresentação inicial com voz
+setTimeout(()=>{
+  document.getElementById('vchat').innerHTML='';
+  addMsg('g',APRESENTACAO);
+  falar(APRESENTACAO);
+},600);
 </script>
 </body>
 </html>
